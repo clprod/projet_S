@@ -1,10 +1,10 @@
 require "entity"
 
-Weapon = Object:extend()
+Weapon = Entity:extend()
 
 function Weapon:new(owner)
 	self.owner = owner
-	self.position = owner.position
+	self.position = self.owner.position
 
 	self.width, self.height = 8, 8
 	self.lastTimeShoot = 0
@@ -13,7 +13,7 @@ end
 
 function Weapon:update(dt)
 	Weapon.super:update(dt)
-	self.position = owner.position
+	self.position = self.owner.position
 end
 
 function Weapon:draw()
