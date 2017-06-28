@@ -23,8 +23,11 @@ function Weapon:draw()
 end
 
 function Weapon:shoot(lastTimeShoot, loadingTime)
-	if lastTimeShoot + loadingTime > love.timer.getTime() then
-		print "pan"
+	if lastTimeShoot + love.timer.getTime() > loadingTime then
+		print ("pan")
+		return love.timer.getTime()
+	else
+		return lastTimeShoot
 	end
 end
 

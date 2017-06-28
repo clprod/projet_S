@@ -17,9 +17,7 @@ function Gun:draw()
 end
 
 function Gun:shoot()
-	if self.lastTimeShoot + self.loadingTime > love.timer.getTime() then
-		Gun.super:shoot(self.lastTimeShoot, self.loadingTime)
-	end
+	self.lastTimeShoot = Gun.super:shoot(self.lastTimeShoot, self.loadingTime)
 end
 
 

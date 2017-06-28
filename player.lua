@@ -20,6 +20,9 @@ end
 function Player:update(dt)
   Player.super:update(dt)
   self:move(dt)
+  if love.mouse.isDown("1") then
+    self:shoot(dt)
+  end
 end
 
 function Player:draw()
@@ -31,19 +34,10 @@ end
 
 function Player:equip(weapon)
   self.weapon = weapon
-  print (self.weapon.name)
 end
 
 function Player:shoot(dt)
-  if love.mouse.isDown("1") then
-    print(self.weapon.name)
     self.weapon:shoot(dt)
-  end
-end
-
-
-function love.mousepressed(x, y, button, istouch)
-   if button == 1 then Player:shoot() end
 end
 
 function Player:move(dt)

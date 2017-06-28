@@ -9,7 +9,6 @@ function Game:init()
   love.window.setTitle("Project_S - Game")
 
   self.map = Map()
-  love.window.setTitle("Project_S - Game")
   self.player = Player()
   self.weapon = Gun(self.player)
 
