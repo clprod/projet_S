@@ -1,4 +1,5 @@
 GameState = require "libraries.hump.gamestate"
+Object = require "libraries.classic.classic"
 
 require "main-menu"
 require "game"
