@@ -14,7 +14,6 @@ end
 function Weapon:update(dt)
 	Weapon.super:update(dt)
 	self.position = owner.position
-
 end
 
 function Weapon:draw()
