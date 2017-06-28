@@ -8,17 +8,17 @@ function Player:new()
   Player.super:new()
 
   self.width, self.height = 32, 32
-  self.position = Vector(16, 16)
+  self.position = Vector(16, 16)  
   self.velocity = Vector()
   self.acceleration = 20
   self.drag = 80
   self.maxSpeed = 10
   self.jumpPower = 10
+  self.weapon = nil
 end
 
 function Player:update(dt)
   Player.super:update(dt)
-
   self:move(dt)
 end
 
@@ -27,6 +27,23 @@ function Player:draw()
 
   love.graphics.setColor(255, 255, 255)
   love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
+end
+
+function Player:equip(weapon)
+  self.weapon = weapon
+  print (self.weapon.name)
+end
+
+function Player:shoot(dt)
+  if love.mouse.isDown("1") then
+    print(self.weapon.name)
+    self.weapon:shoot(dt)
+  end
+end
+
+
+function love.mousepressed(x, y, button, istouch)
+   if button == 1 then Player:shoot() end
 end
 
 function Player:move(dt)
