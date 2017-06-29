@@ -9,7 +9,7 @@ function Player:new(game)
 
   self.game = game
 
-  self.width, self.height = 26, 26
+  self.width, self.height = 30, 30
   self.position = Vector(48, 48)
   self.velocity = Vector()
   self.acceleration = 20
@@ -82,19 +82,9 @@ function Player:move(dt)
     self.velocity.y = -self.jumpPower
   end
 
-  -- update position
-  self.position = self.position + self.velocity
-
+  -- update x position
+  self.position.x = self.position.x + self.velocity.x
   -- keep inside screen
-  if self.position.y + self.height/2 > love.graphics.getHeight() then
-    self.velocity.y = 0
-    self.position.y = love.graphics.getHeight() - self.height/2
-  elseif self.position.y - self.height/2 < 0 then
-    self.velocity.y = 0
-    self.position.y = self.height/2
-  end
-
-  -- Map collision
   if self.position.x + self.width/2 > love.graphics.getWidth() then
     self.velocity.x = 0
     self.position.x = love.graphics.getWidth() - self.width/2
@@ -102,18 +92,7 @@ function Player:move(dt)
     self.velocity.x = 0
     self.position.x = self.width/2
   end
-
-  if self.velocity.y > 0 then
-    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) then
-      self.position.y = self.position.y - self.velocity.y
-      self.velocity.y = 0
-    end
-  elseif self.velocity.y < 0 then
-    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) then
-      self.velocity.y = 0
-    end
-  end
-
+  -- map collision
   if self.velocity.x > 0 then
       if self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) then
         self.position.x = self.position.x - self.velocity.x
@@ -124,5 +103,28 @@ function Player:move(dt)
         self.position.x = self.position.x - self.velocity.x
         self.velocity.x = 0
       end
+  end
+
+  -- update y position
+  self.position.y = self.position.y + self.velocity.y
+  -- keep inside screen
+  if self.position.y + self.height/2 > love.graphics.getHeight() then
+    self.velocity.y = 0
+    self.position.y = love.graphics.getHeight() - self.height/2
+  elseif self.position.y - self.height/2 < 0 then
+    self.velocity.y = 0
+    self.position.y = self.height/2
+  end
+  -- Map collision
+  if self.velocity.y > 0 then
+    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) then
+      self.position.y = self.position.y - self.velocity.y
+      self.velocity.y = 0
+    end
+  elseif self.velocity.y < 0 then
+    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) then
+      self.position.y = self.position.y - self.velocity.y
+      self.velocity.y = 0
+    end
   end
 end
