@@ -45,3 +45,7 @@ function Map:isSolid(x, y)
 
   return self.grid[y][x] == 1
 end
+
+function Map:isPixelPosSolid(pos)
+  return self:isSolid(pos.x / self.tileWidth + 1, pos.y / self.tileHeight + 1)
+end

@@ -9,7 +9,7 @@ function Game:init()
   love.window.setTitle("Project_S - Game")
 
   self.map = Map()
-  self.player = Player()
+  self.player = Player(self)
   self.weapon = Gun(self.player)
 
   self.player:equip(self.weapon)

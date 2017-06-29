@@ -4,11 +4,13 @@ Player = Entity:extend()
 
 local gravity = 20
 
-function Player:new()
+function Player:new(game)
   Player.super:new()
 
-  self.width, self.height = 32, 32
-  self.position = Vector(16, 16)  
+  self.game = game
+
+  self.width, self.height = 26, 26
+  self.position = Vector(48, 48)
   self.velocity = Vector()
   self.acceleration = 20
   self.drag = 80
@@ -74,7 +76,9 @@ function Player:move(dt)
     end
   end
 
-  if love.keyboard.isDown("space") and self.position.y + self.height/2 >= love.graphics.getHeight() then
+  if love.keyboard.isDown("space") and (self.position.y + self.height/2 >= love.graphics.getHeight() or
+                                        self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2+1)) or
+                                        self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2+1))) then
     self.velocity.y = -self.jumpPower
   end
 
@@ -90,11 +94,35 @@ function Player:move(dt)
     self.position.y = self.height/2
   end
 
+  -- Map collision
   if self.position.x + self.width/2 > love.graphics.getWidth() then
     self.velocity.x = 0
     self.position.x = love.graphics.getWidth() - self.width/2
   elseif self.position.x - self.width/2 < 0 then
     self.velocity.x = 0
     self.position.x = self.width/2
+  end
+
+  if self.velocity.y > 0 then
+    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) then
+      self.position.y = self.position.y - self.velocity.y
+      self.velocity.y = 0
+    end
+  elseif self.velocity.y < 0 then
+    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) then
+      self.velocity.y = 0
+    end
+  end
+
+  if self.velocity.x > 0 then
+      if self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) then
+        self.position.x = self.position.x - self.velocity.x
+        self.velocity.x = 0
+      end
+  elseif self.velocity.x < 0 then
+      if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) then
+        self.position.x = self.position.x - self.velocity.x
+        self.velocity.x = 0
+      end
   end
 end
