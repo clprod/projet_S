@@ -3,6 +3,10 @@ require "entity"
 Player = Entity:extend()
 
 local gravity = 20
+local maxDashingTime = 1
+local dashingTimeRecovery = 20
+local dashingPower = 10
+local spaceKeyIsRealeased = true
 
 function Player:new(game)
   Player.super:new()
@@ -12,24 +16,30 @@ function Player:new(game)
   self.width, self.height = 30, 30
   self.position = Vector(48, 48)
   self.velocity = Vector()
-  self.acceleration = 20
-  self.drag = 80
-  self.maxSpeed = 10
+  self.acceleration = 10
+  self.drag = 40
+  self.maxSpeed = 4
   self.jumpPower = 10
   self.weapon = nil
+  self.isDashing = false
+  self.dashingTimer = love.timer.getTime()
 end
 
 function Player:update(dt)
   Player.super:update(dt)
   self:move(dt)
-  if love.mouse.isDown("1") then
+  if love.mouse.isDown("1") then         
     self:shoot(dt)
+  end
+
+  -- dash timer check
+  if self.dashingTimer >= maxDashingTime and self.isDashing then
+    self.isDashing = false
   end
 end
 
 function Player:draw()
   Player.super:draw()
-
   love.graphics.setColor(255, 255, 255)
   love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
 end
@@ -42,16 +52,16 @@ function Player:shoot(dt)
     self.weapon:shoot(dt)
 end
 
+
 function Player:move(dt)
   self.velocity.y = self.velocity.y + dt * gravity
-
   if love.keyboard.isDown("q") or love.keyboard.isDown("left") then
     if self.velocity.x > 0 then
       -- Direction changed
       self.velocity.x = 0
     end
     self.velocity.x = self.velocity.x - self.acceleration * dt
-    if self.velocity.x < -self.maxSpeed then
+    if self.velocity.x < -self.maxSpeed  and not self.dashing then
       -- Keep speed at max speed
       self.velocity.x = -self.maxSpeed
     end
@@ -61,25 +71,47 @@ function Player:move(dt)
       self.velocity.x = 0
     end
     self.velocity.x = self.velocity.x + self.acceleration * dt
-    if self.velocity.x > self.maxSpeed then
+    if self.velocity.x > self.maxSpeed  and not self.dashing then
       -- Keep speed at max speed
       self.velocity.x = self.maxSpeed
     end
   else
     -- No key pressed, slowly stop
-    if self.velocity.x < -1 then
+    if self.velocity.x < -1 and not self.dashing then
       self.velocity.x = self.velocity.x + self.drag * dt
-    elseif self.velocity.x > 1 then
+    elseif self.velocity.x > 1 and not self.dashing then
       self.velocity.x = self.velocity.x - self.drag * dt
     else
       self.velocity.x = 0
     end
   end
 
-  if love.keyboard.isDown("space") and (self.position.y + self.height/2 >= love.graphics.getHeight() or
+  if love.keyboard.isDown("z") and (self.position.y + self.height/2 >= love.graphics.getHeight() or
                                         self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2+1)) or
                                         self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2+1))) then
     self.velocity.y = -self.jumpPower
+  end
+
+  -- check space key
+  if not love.keyboard.isDown() then 
+    spaceKeyIsRealeased = true
+  end
+
+
+  if love.keyboard.isDown("space") 
+    and not self.isDashing 
+    and spaceKeyIsRealeased 
+    and self.dashingTimer >= dashingTimeRecovery then
+    -- dashing action
+    print("dashing")
+    self.isDashing = true
+    spaceKeyIsRealeased = false
+    self.dashingTimer = love.timer.getTime()
+    if self.velocity.x > 0 then
+      self.velocity.x = self.velocity.x + dashingPower
+    else 
+      self.velocity.x = self.velocity.x - dashingPower
+    end
   end
 
   -- update x position
