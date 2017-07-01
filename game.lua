@@ -3,6 +3,8 @@ require "map"
 require "weapon"
 require "gun"
 
+
+
 Game = {}
 
 function Game:init()
@@ -25,4 +27,9 @@ function Game:draw()
   self.map:draw()
   self.player:draw()
   self.weapon:draw()
+
+  -- Print debug data
+  love.graphics.print("fps: "..love.timer.getFPS(), 12, 12)
+  
+
 end
