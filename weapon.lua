@@ -29,11 +29,11 @@ function Weapon:draw()
 end
 
 function Weapon:shoot()
-	if self.lastTimeShoot + love.timer.getTime() > self.loadingTime then
-		print("pan")
+	if love.timer.getTime() - self.loadingTime > self.lastTimeShoot then
 		mouseX, mouseY = love.mouse.getPosition()
 		table.insert(self.firedBullets, Bullet(self.game, Vector(mouseX, mouseY)))
 		self.lastTimeShoot = love.timer.getTime()
+		print("pan")
 	end
 	return self.lastTimeShoot
 end

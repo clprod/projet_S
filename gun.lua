@@ -4,9 +4,9 @@ Gun = Weapon:extend()
 
 function Gun:new(game)
 	Gun.super:new(game)
-	self.loadingTime = 1
+	self.loadingTime = 0.3
 	self.name = "gun"
-	self.shootingPower = 10	
+	self.shootingPower = 0.1
 
 	self.super.loadingTime = self.loadingTime
 

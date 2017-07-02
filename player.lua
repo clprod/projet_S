@@ -48,7 +48,7 @@ end
 
 
 function Player:move(dt)
-  self.velocity.y = self.velocity.y + dt * gravity
+  self.velocity.y = self.velocity.y + dt * gravity 
   if love.keyboard.isDown("q") or love.keyboard.isDown("left") then
     if self.velocity.x > 0 then
       -- Direction changed
