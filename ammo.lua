@@ -2,45 +2,44 @@ require "entity"
 
 Ammo = Entity:extend()
 
-function Ammo:new(game, id, mousePos)
+function Ammo:new(game, mousePos)
 	Ammo.super:new(game)
-	self.id = id
-	self.initPos = game.weapon.position
 	self.velocity = Vector(0,0)
-	self.position = game.weapon.position
+	self.position = Vector(game.weapon.position.x, game.weapon.position.y)
 	self.direction = (mousePos - self.position):normalized()
-	self.acceleration = game.weapon.shootingPower
+	self.acceleration = 20
 	self.maxSpeed = 30
-	self.speed = game.player.acceleration
+	self.speed = 0
 	self.width = nil
 	self.height = nil
-
 end
 
 function Ammo:update(dt)
-	Ammo.super.update()
+	Ammo.super:update(dt)
 	self:move(dt)
 end
 
 function Ammo:draw()
-	Ammo.super.draw()
+	Ammo.super:draw()
 end
 
 function Ammo:move(dt)
 	self.speed = self.speed + self.acceleration * dt
 
 	if self.speed > self.maxSpeed then
-      self.speed = self.maxSpeed
-    end
+    self.speed = self.maxSpeed
+  end
 
 	self.position = self.position + self.direction * self.speed
+end
 
-    -- Map collision
-    if (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) )
-    or
-    (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) ) then
-    	print("remove next id : ", self.id)
-    	self.game.weapon.firedBullets[self.id] = nil
-    	--table.remove(self.game.weapon.firedBullets)
-    end
+function Ammo:isColliding()
+  -- Map collision
+  if (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) )
+  or
+  (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) ) then
+		return true
+  end
+
+	return false
 end

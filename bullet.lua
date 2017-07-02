@@ -2,15 +2,11 @@
 
 Bullet = Ammo:extend()
 
-bulletSpeed = 10
-
-function Bullet:new(game, id, mousePos)
-	Bullet.super:new(game, id, mousePos)
-	self.maxSpeed = 30
+function Bullet:new(game, mousePos)
+	Bullet.super:new(game, mousePos)
+	self.maxSpeed = nil
 	self.width = 5
-	self.super.width = self.width
 	self.height = 5
-	self.super.height = self.width
 end
 
 function Bullet:update(dt)
@@ -20,5 +16,5 @@ end
 function Bullet:draw()
 	Bullet.super:draw()
 	love.graphics.setColor(255, 0, 0)
-  	love.graphics.circle("fill", self.position.x, self.position.y, self.width, 6)
+	love.graphics.circle("fill", self.position.x, self.position.y, self.width, 6)
 end

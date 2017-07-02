@@ -6,11 +6,9 @@ function Gun:new(game)
 	Gun.super:new(game)
 	self.loadingTime = 0.2
 	self.name = "gun"
-	self.shootingPower = 0.1
+	self.shootingPower = 50
 
 	self.super.loadingTime = self.loadingTime
-	print("init bulletbulletCounter: ",self.bulletCounter)
-
 end
 
 function Gun:update(dt)
@@ -28,6 +26,3 @@ end
 function Gun:setOwner(owner)
 	Gun.super:setOwner(owner)
 end
-
-
-
