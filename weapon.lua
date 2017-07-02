@@ -18,8 +18,8 @@ end
 
 function Weapon:update(dt)
 	Weapon.super:update(dt)
-	self.position = self.owner.position 
-	
+	self.position = self.owner.position
+
 end
 
 function Weapon:draw()
@@ -31,7 +31,8 @@ end
 function Weapon:shoot()
 	if self.lastTimeShoot + love.timer.getTime() > self.loadingTime then
 		print("pan")
-		table.insert(self.firedBullets, Bullet(self.game, love.mouse.getPosition))
+		mouseX, mouseY = love.mouse.getPosition()
+		table.insert(self.firedBullets, Bullet(self.game, Vector(mouseX, mouseY)))
 		self.lastTimeShoot = love.timer.getTime()
 	end
 	return self.lastTimeShoot
@@ -41,7 +42,3 @@ function Weapon:setOwner(owner)
 	self.owner = owner
 	self.position = self.owner.position
 end
-
-
-
-			

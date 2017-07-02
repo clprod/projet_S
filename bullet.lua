@@ -4,8 +4,8 @@ Bullet = Ammo:extend()
 
 bulletSpeed = 10
 
-function Bullet:new(game, direction)
-	Bullet.super:new(game, direction)
+function Bullet:new(game, mousePos)
+	Bullet.super:new(game, mousePos)
 	self.maxSpeed = 20
 	print("Bullet created")
 end
