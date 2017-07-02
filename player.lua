@@ -3,33 +3,31 @@ require "entity"
 Player = Entity:extend()
 
 local gravity = 20
-local maxDashingTime = 1
-local dashingTimeRecovery = 20
-local dashingPower = 10
+local maxDashingTime = 2
+local dashingTimeRecovery = 10
+local dashingPower = 20
 local spaceKeyIsRealeased = true
 
 function Player:new(game)
-  Player.super:new()
-
-  self.game = game
-
+  self.name = "toto"
+  Player.super:new(game)
   self.width, self.height = 30, 30
-  self.position = Vector(64, 64)
+  self.position = Vector(48, 48)
   self.velocity = Vector()
   self.acceleration = 10
   self.drag = 40
   self.maxSpeed = 4
   self.jumpPower = 10
-  self.weapon = nil
+  self.weapon = game.weapon
   self.isDashing = false
-  self.dashingTimer = love.timer.getTime()
+  self.dashingTimer = 9999
 end
 
 function Player:update(dt)
   Player.super:update(dt)
   self:move(dt)
-  if love.mouse.isDown("1") then
-    self:shoot(dt)
+  if love.mouse.isDown("1") then         
+    self.weapon:shoot()
   end
 
   -- dash timer check
@@ -46,10 +44,6 @@ end
 
 function Player:equip(weapon)
   self.weapon = weapon
-end
-
-function Player:shoot(dt)
-    self.weapon:shoot(dt)
 end
 
 
@@ -87,29 +81,29 @@ function Player:move(dt)
   end
 
   if love.keyboard.isDown("z") and (self.position.y + self.height/2 >= love.graphics.getHeight() or
-                                        self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2+1, self.height/2+1)) or
-                                        self.game.map:isPixelPosSolid(self.position + Vector(self.width/2-1, self.height/2+1))) then
+                                        self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2+1)) or
+                                        self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2+1))) then
     self.velocity.y = -self.jumpPower
   end
 
   -- check space key
-  if not love.keyboard.isDown() then
+  if not love.keyboard.isDown('space') then 
     spaceKeyIsRealeased = true
   end
 
 
-  if love.keyboard.isDown("space")
-    and not self.isDashing
-    and spaceKeyIsRealeased
+  elapsed_time = os.difftime(self.dashingTimer - dashingTimeRecovery)
+  if love.keyboard.isDown('space') 
+    and not self.isDashing 
+    and spaceKeyIsRealeased 
     and self.dashingTimer >= dashingTimeRecovery then
     -- dashing action
-    print("dashing")
     self.isDashing = true
     spaceKeyIsRealeased = false
     self.dashingTimer = love.timer.getTime()
     if self.velocity.x > 0 then
       self.velocity.x = self.velocity.x + dashingPower
-    else
+    else 
       self.velocity.x = self.velocity.x - dashingPower
     end
   end
@@ -126,13 +120,13 @@ function Player:move(dt)
   end
   -- map collision
   if self.velocity.x > 0 then
-      if self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2+1)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2-1)) then
-        self.position.x = math.floor((self.position.x + self.width/2) / self.game.map.tileWidth) * self.game.map.tileWidth - self.width/2
+      if self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) then
+        self.position.x = self.position.x - self.velocity.x
         self.velocity.x = 0
       end
   elseif self.velocity.x < 0 then
-      if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2+1)) or self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2-1)) then
-        self.position.x = math.floor(self.position.x / self.game.map.tileWidth) * self.game.map.tileWidth + self.width/2
+      if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) then
+        self.position.x = self.position.x - self.velocity.x
         self.velocity.x = 0
       end
   end
@@ -149,13 +143,13 @@ function Player:move(dt)
   end
   -- Map collision
   if self.velocity.y > 0 then
-    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2+1, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2-1, self.height/2)) then
-      self.position.y = math.floor((self.position.y + self.height/2) / self.game.map.tileHeight) * self.game.map.tileHeight - self.height/2
+    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) then
+      self.position.y = self.position.y - self.velocity.y
       self.velocity.y = 0
     end
   elseif self.velocity.y < 0 then
-    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2+1, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2-1, -self.height/2)) then
-      self.position.y = math.floor(self.position.y / self.game.map.tileHeight) * self.game.map.tileHeight + self.height/2
+    if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) then
+      self.position.y = self.position.y - self.velocity.y
       self.velocity.y = 0
     end
   end

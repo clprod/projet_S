@@ -1,6 +1,7 @@
 Entity = Object:extend()
 
-function Entity:new()
+function Entity:new(game)
+ self.game = game
 end
 
 function Entity:update(dt)
