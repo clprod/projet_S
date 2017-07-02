@@ -22,7 +22,7 @@ end
 function Weapon:update(dt)
 	Weapon.super:update(dt)
 	self.position = self.owner.position
-	Weapon:resetBulletCounter()
+	--Weapon:resetBulletCounter()
 end
 
 function Weapon:draw()
@@ -34,11 +34,12 @@ end
 function Weapon:shoot()
 	if love.timer.getTime() - self.loadingTime > self.lastTimeShoot then
 		mouseX, mouseY = love.mouse.getPosition()
-		print(string.format("bulletCounter: ",self.bulletCounter))
-		table.insert(self.firedBullets, Bullet(self.game, self.bulletCounter, Vector(mouseX, mouseY)))
+		print("shoot: ",self.bulletCounter)
+		self.firedBullets[self.bulletCounter] = Bullet(self.game, self.bulletCounter, Vector(mouseX, mouseY)) 
+		--table.insert(self.firedBullets, Bullet(self.game, self.bulletCounter, Vector(mouseX, mouseY)))
 		self.lastTimeShoot = love.timer.getTime()
 		self.bulletCounter = self.bulletCounter + 1
-		print(string.format("bulletCounter: ",self.bulletCounter))
+		print("1 + bulletCounter: ",self.bulletCounter)
 	end
 	return self.lastTimeShoot
 end
@@ -52,6 +53,6 @@ function Weapon:resetBulletCounter()
 	-- prevent stack overflow... maybe
 	if next(self.firedBullets) == nil then
 		self.bulletCounter = 0
-		print(string.format("reset bulletCounter: ",self.bulletCounter))
+		print("raz bulletCounter: ",self.bulletCounter)
 	end
 end

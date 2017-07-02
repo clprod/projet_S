@@ -33,6 +33,7 @@ function Game:draw()
   self.player:draw()
   self.weapon:draw()
   for key, value in pairs(self.weapon.firedBullets) do
+  	print("key : ", key, " value : ", value.id)
   	value:draw(dt)
   end
 

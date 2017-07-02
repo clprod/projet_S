@@ -4,7 +4,7 @@ Ammo = Entity:extend()
 
 function Ammo:new(game, id, mousePos)
 	Ammo.super:new(game)
-	self.id = idNumber
+	self.id = id
 	self.initPos = game.weapon.position
 	self.velocity = Vector(0,0)
 	self.position = game.weapon.position
@@ -39,8 +39,8 @@ function Ammo:move(dt)
     if (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) )
     or
     (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) ) then
-    	print(self.id)
-    	table.remove(self.game.weapon.firedBullets, self.id)
-
+    	print("remove next id : ", self.id)
+    	self.game.weapon.firedBullets[self.id] = nil
+    	--table.remove(self.game.weapon.firedBullets)
     end
 end

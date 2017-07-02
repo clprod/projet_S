@@ -9,6 +9,7 @@ function Gun:new(game)
 	self.shootingPower = 0.1
 
 	self.super.loadingTime = self.loadingTime
+	print("init bulletbulletCounter: ",self.bulletCounter)
 
 end
 
