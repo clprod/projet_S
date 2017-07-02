@@ -9,13 +9,13 @@ function Ammo:new(game, direction)
 	self.velocity = Vector(0,0)
 	self.position = game.weapon.position
 	self.acceleration = game.weapon.shootingPower
-	self.maxSpeed = nil
+	self.maxSpeed = 20
 
 end
 
 function Ammo:update(dt)
 	Ammo.super.update()
-	Ammo.move(dt)
+	self:move(dt)
 end
 
 function Ammo:draw()
@@ -34,7 +34,7 @@ function Ammo:move(dt)
     if self.velocity.x > self.maxSpeed  then
       -- Keep speed at max speed
       self.velocity.x = self.maxSpeed
-    
+
       -- update x position
       self.position.x = self.position.x + self.velocity.x
       -- update y position
@@ -42,12 +42,11 @@ function Ammo:move(dt)
 	end
 
     -- Map collision
-    if (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) )
-    or
-    (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) ) then
-    	table.remove(self.game.weapon.firedBullets, self)
-    	self = nil
-
-    end
+    -- if (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) )
+    -- or
+    -- (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) ) then
+    -- 	table.remove(self.game.weapon.firedBullets, self)
+    -- 	self = nil
+		--
+    -- end
 end
-

@@ -19,10 +19,9 @@ function Bullet:draw()
 	print("draw")
 	Bullet.super:draw()
 	love.graphics.setColor(255, 0, 0)
-  	love.love.graphics.circle("fill", self.position.x, self.position.y, 50, 6)
+  	love.graphics.circle("fill", self.position.x, self.position.y, 50, 6)
 end
 
 --function Bullet:shoot()
 --	self.lastTimeShoot = Gun.super:shoot(self.lastTimeShoot, self.loadingTime)
 --end
-
