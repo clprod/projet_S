@@ -4,8 +4,8 @@ Bullet = Ammo:extend()
 
 bulletSpeed = 10
 
-function Bullet:new(game, mousePos)
-	Bullet.super:new(game, mousePos)
+function Bullet:new(game, id, mousePos)
+	Bullet.super:new(game, id, mousePos)
 	self.maxSpeed = 30
 	self.width = 5
 	self.super.width = self.width

@@ -2,8 +2,9 @@ require "entity"
 
 Ammo = Entity:extend()
 
-function Ammo:new(game, mousePos)
+function Ammo:new(game, id, mousePos)
 	Ammo.super:new(game)
+	self.id = idNumber
 	self.initPos = game.weapon.position
 	self.velocity = Vector(0,0)
 	self.position = game.weapon.position
@@ -38,7 +39,8 @@ function Ammo:move(dt)
     if (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, self.height/2)) )
     or
     (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) ) then
-    	table.remove(self.game.weapon.firedBullets)
+    	print(self.id)
+    	table.remove(self.game.weapon.firedBullets, self.id)
 
     end
 end
