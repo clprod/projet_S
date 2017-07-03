@@ -5,7 +5,7 @@ require "bullet"
 Weapon = Entity:extend()
 
 function Weapon:new(game)
-	Weapon.super:new(game)
+	Weapon.super.new(self, game)
 	self.position = nil
 	self.owner = nil
 	self.width, self.height = 8, 8
@@ -17,7 +17,7 @@ function Weapon:new(game)
 end
 
 function Weapon:update(dt)
-	Weapon.super:update(dt)
+	Weapon.super.update(self, dt)
 	self.position = self.owner.position
 
 	for i=#self.firedBullets,1,-1 do
@@ -29,7 +29,7 @@ function Weapon:update(dt)
 end
 
 function Weapon:draw()
-	Weapon.super:draw()
+	Weapon.super.draw(self)
 	love.graphics.setColor(255, 0, 0)
 	love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
 

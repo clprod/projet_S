@@ -1,7 +1,7 @@
 Map = Entity:extend()
 
 function Map:new()
-  self.super:new()
+  self.super.new(self)
 
   self:init("maps/map0.lua")
 end
@@ -18,11 +18,11 @@ function Map:init(filename)
 end
 
 function Map:update(dt)
-  self.super:update(dt)
+  self.super.update(self, dt)
 end
 
 function Map:draw()
-  self.super:draw()
+  self.super.draw(self)
 
   for x=1,self.width do
     for y=1,self.height do

@@ -3,7 +3,7 @@ require "entity"
 Ammo = Entity:extend()
 
 function Ammo:new(game, mousePos)
-	Ammo.super:new(game)
+	Ammo.super.new(self, game)
 	self.velocity = Vector(0,0)
 	self.position = Vector(game.weapon.position.x, game.weapon.position.y)
 	self.direction = (mousePos - self.position):normalized()
@@ -15,12 +15,12 @@ function Ammo:new(game, mousePos)
 end
 
 function Ammo:update(dt)
-	Ammo.super:update(dt)
+	Ammo.super.update(self, dt)
 	self:move(dt)
 end
 
 function Ammo:draw()
-	Ammo.super:draw()
+	Ammo.super.draw(self)
 end
 
 function Ammo:move(dt)

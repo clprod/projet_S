@@ -10,7 +10,7 @@ local spaceKeyIsRealeased = true
 
 function Player:new(game)
   self.name = "toto"
-  Player.super:new(game)
+  Player.super.new(self, game)
   self.width, self.height = 30, 30
   self.position = Vector(48, 48)
   self.velocity = Vector()
@@ -24,9 +24,9 @@ function Player:new(game)
 end
 
 function Player:update(dt)
-  Player.super:update(dt)
+  Player.super.update(self, dt)
   self:move(dt)
-  if love.mouse.isDown("1") then         
+  if love.mouse.isDown("1") then
     self.weapon:shoot()
   end
 
@@ -37,7 +37,7 @@ function Player:update(dt)
 end
 
 function Player:draw()
-  Player.super:draw()
+  Player.super.draw(self)
   love.graphics.setColor(255, 255, 255)
   love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
 end
@@ -48,7 +48,7 @@ end
 
 
 function Player:move(dt)
-  self.velocity.y = self.velocity.y + dt * gravity 
+  self.velocity.y = self.velocity.y + dt * gravity
   if love.keyboard.isDown("q") or love.keyboard.isDown("left") then
     if self.velocity.x > 0 then
       -- Direction changed
@@ -87,15 +87,15 @@ function Player:move(dt)
   end
 
   -- check space key
-  if not love.keyboard.isDown('space') then 
+  if not love.keyboard.isDown('space') then
     spaceKeyIsRealeased = true
   end
 
 
   elapsed_time = os.difftime(self.dashingTimer - dashingTimeRecovery)
-  if love.keyboard.isDown('space') 
-    and not self.isDashing 
-    and spaceKeyIsRealeased 
+  if love.keyboard.isDown('space')
+    and not self.isDashing
+    and spaceKeyIsRealeased
     and self.dashingTimer >= dashingTimeRecovery then
     -- dashing action
     self.isDashing = true
@@ -103,7 +103,7 @@ function Player:move(dt)
     self.dashingTimer = love.timer.getTime()
     if self.velocity.x > 0 then
       self.velocity.x = self.velocity.x + dashingPower
-    else 
+    else
       self.velocity.x = self.velocity.x - dashingPower
     end
   end
