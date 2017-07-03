@@ -4,25 +4,44 @@ Gun = Weapon:extend()
 
 function Gun:new(game)
 	Gun.super.new(self, game)
-	self.loadingTime = 0.2
-	self.name = "gun"
-	self.shootingPower = 50
 
-	self.super.loadingTime = self.loadingTime
+	self.shootingPower = 50
+	self.loadingTime = 0.2
+	self.lastTimeShoot = 0
+
+	self.firedBullets = {}
 end
 
 function Gun:update(dt)
 	Gun.super.update(self, dt)
+
+	self.lastTimeShoot = self.lastTimeShoot + dt
+
+	for i=#self.firedBullets,1,-1 do
+		self.firedBullets[i]:update(dt)
+		if self.firedBullets[i]:isColliding() then
+			table.remove(self.firedBullets, i)
+		end
+	end
 end
 
 function Gun:draw()
 	Gun.super.draw(self)
+
+	love.graphics.setColor(255, 0, 0)
+	love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
+
+	for i,bullet in ipairs(self.firedBullets) do
+		bullet:draw()
+	end
 end
 
 function Gun:shoot()
-	self.lastTimeShoot = Gun.super.shoot(self, self.lastTimeShoot, self.loadingTime)
-end
+	Gun.super.shoot(self)
 
-function Gun:setOwner(owner)
-	Gun.super.setOwner(self, owner)
+	if self.lastTimeShoot >= self.loadingTime then
+		local mouseX, mouseY = love.mouse.getPosition()
+		table.insert(self.firedBullets, Bullet(self.game, self.position, Vector(mouseX, mouseY)))
+		self.lastTimeShoot = 0
+	end
 end
