@@ -2,24 +2,27 @@
 
 Bullet = Ammo:extend()
 
+bulletImage = love.graphics.newImage("ressources/fire.png")
+
 function Bullet:new(game, initialPosition, mousePos)
 	Bullet.super.new(self, game, initialPosition)
-	self.direction = (mousePos - self.position):normalized()
-	self.speed = 500
-	self.width = 5
-	self.height = 5
+	self.origin = initialPosition
+	self.direction = mousePos
+	self.speed = 2000
+	self.width = bulletImage:getWidth()
+	self.height = bulletImage:getHeight()
 end
 
 function Bullet:update(dt)
 	Bullet.super.update(self, dt)
-
 	self:move(dt)
 end
 
 function Bullet:draw()
 	Bullet.super.draw(self)
-	love.graphics.setColor(255, 0, 0)
-	love.graphics.circle("fill", self.position.x, self.position.y, self.width, 6)
+	--love.graphics.reset()
+	love.graphics.draw(bulletImage, self.position.x, self.position.y, 1, 1, 1, self.width, self.height)
+
 end
 
 function Bullet:move(dt)

@@ -5,8 +5,6 @@ Ammo = Entity:extend()
 function Ammo:new(game, initialPosition)
 	Ammo.super.new(self, game)
 	self.position = Vector(initialPosition.x, initialPosition.y)
-	self.width = nil
-	self.height = nil
 end
 
 function Ammo:update(dt)
