@@ -4,12 +4,9 @@ Ammo = Entity:extend()
 
 function Ammo:new(game, mousePos)
 	Ammo.super.new(self, game)
-	self.velocity = Vector(0,0)
 	self.position = Vector(game.weapon.position.x, game.weapon.position.y)
 	self.direction = (mousePos - self.position):normalized()
-	self.acceleration = 20
-	self.maxSpeed = 30
-	self.speed = 0
+	self.speed = 500
 	self.width = nil
 	self.height = nil
 end
@@ -24,13 +21,7 @@ function Ammo:draw()
 end
 
 function Ammo:move(dt)
-	self.speed = self.speed + self.acceleration * dt
-
-	if self.speed > self.maxSpeed then
-    self.speed = self.maxSpeed
-  end
-
-	self.position = self.position + self.direction * self.speed
+	self.position = self.position + self.direction * self.speed * dt
 end
 
 function Ammo:isColliding()
