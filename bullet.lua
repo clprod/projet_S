@@ -7,8 +7,8 @@ bulletImage = love.graphics.newImage("ressources/fire.png")
 function Bullet:new(game, initialPosition, mousePos)
 	Bullet.super.new(self, game, initialPosition)
 	self.origin = initialPosition
-	self.direction = mousePos
-	self.speed = 2000
+	self.direction = (mousePos - self.position):normalized()
+	self.speed = 500
 	self.width = bulletImage:getWidth()
 	self.height = bulletImage:getHeight()
 end
@@ -20,8 +20,9 @@ end
 
 function Bullet:draw()
 	Bullet.super.draw(self)
-	--love.graphics.reset()
-	love.graphics.draw(bulletImage, self.position.x, self.position.y, 1, 1, 1, self.width, self.height)
+
+	love.graphics.setColor(255, 255, 255)
+	love.graphics.draw(bulletImage, self.position.x, self.position.y, self.direction:angleTo(), 1, 1, self.width/2, self.height/2)
 
 end
 
