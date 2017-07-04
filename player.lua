@@ -126,7 +126,7 @@ function Player:move(dt)
       end
   elseif self.velocity.x < 0 then
       if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2+1)) or self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, self.height/2-1)) then
-        self.position.x = math.floor(self.position.x / self.game.map.tileWidth) * self.game.map.tileWidth + self.width/2
+        self.position.x = math.floor((self.position.x + self.width/2) / self.game.map.tileWidth) * self.game.map.tileWidth + self.width/2
         self.velocity.x = 0
       end
   end
@@ -149,7 +149,7 @@ function Player:move(dt)
     end
   elseif self.velocity.y < 0 then
     if self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2+1, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2-1, -self.height/2)) then
-      self.position.y = math.floor(self.position.y / self.game.map.tileHeight) * self.game.map.tileHeight + self.height/2
+      self.position.y = math.floor((self.position.y+self.height/2) / self.game.map.tileHeight) * self.game.map.tileHeight + self.height/2
       self.velocity.y = 0
     end
   end
