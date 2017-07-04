@@ -6,10 +6,10 @@ local gravity = 20
 
 enemyImage = love.graphics.newImage("ressources/eyeball/eyeball2processing1.png")
 
-function Enemy:new(game)
+function Enemy:new(game, position)
   self.name = "eye"
   Enemy.super.new(self, game)
-  self.position = Vector(663, 230)
+  self.position = Vector(position.x, position.y)
   self.width = enemyImage:getWidth() * 0.1
 	self.height = enemyImage:getHeight() * 0.1
   self.velocity = Vector(0,0)

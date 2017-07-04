@@ -19,7 +19,10 @@ function Game:init()
   player:equip(GrenadeLauncher(self))
 
   table.insert(self.entities, player)
-  table.insert(self.entities, Enemy(self))
+  table.insert(self.entities, Enemy(self, Vector(663, 230)))
+  table.insert(self.entities, Enemy(self, Vector(163, 230)))
+  table.insert(self.entities, Enemy(self, Vector(363, 60)))
+  table.insert(self.entities, Enemy(self, Vector(400, 300)))
 end
 
 function Game:update(dt)
