@@ -16,7 +16,7 @@ function Game:init()
   self.entities = {}
 
   local player = Player(self)
-  player:equip(Gun(self))
+  player:equip(GrenadeLauncher(self))
 
   table.insert(self.entities, player)
   table.insert(self.entities, Enemy(self))

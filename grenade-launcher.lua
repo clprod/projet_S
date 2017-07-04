@@ -23,11 +23,19 @@ function GrenadeLauncher:update(dt)
 	for i=#self.firedGrenades,1,-1 do
 		self.firedGrenades[i]:update(dt)
 		if self.firedGrenades[i]:explode() then
-      local explosionDistance = self.position:dist(self.firedGrenades[i].position)
-      if explosionDistance < self.firedGrenades[i].explosionRange then  
-        local explosionDirection = (self.position - self.firedGrenades[i].position):normalized()
-        self.owner.velocity = self.owner.velocity + explosionDirection * self.firedGrenades[i].explosionPower * (self.firedGrenades[i].explosionRange - explosionDistance)/self.firedGrenades[i].explosionRange
+
+      local grenadePosition = self.firedGrenades[i].position
+      local grenadeExplosionRange = self.firedGrenades[i].explosionRange
+      local grenadeExplosionPower = self.firedGrenades[i].explosionPower
+      
+      for i,entity in ipairs(self.game.entities) do
+        local explosionDistance = entity.position:dist(grenadePosition)
+        if explosionDistance < grenadeExplosionRange then
+          local explosionDirection = (entity.position - grenadePosition):normalized()
+          entity.velocity = entity.velocity + explosionDirection * grenadeExplosionPower * (grenadeExplosionRange - explosionDistance) / grenadeExplosionRange
+        end
       end
+
 			table.remove(self.firedGrenades, i)
 		end
 	end

@@ -18,7 +18,7 @@ end
 
 function Enemy:update(dt)
   Enemy.super.update(self, dt)
-  --self:move(dt)
+  self:move(dt)
 
   -- check death
   -- if self.lifeCpt == 0 then self = nul end
@@ -28,7 +28,7 @@ function Enemy:draw()
   Enemy.super.draw(self)
   if self.lifeCpt > 0 then
 	   love.graphics.setColor(255, 255, 255)
-	    love.graphics.draw(enemyImage, self.position.x - self.width/2, self.position.y - self.height/2, 0, 0.1, 0.1, self.width/2, self.height/2)
+	   love.graphics.draw(enemyImage, self.position.x - self.width/2, self.position.y - self.height/2, 0, 0.1, 0.1, self.width/2, self.height/2)
   end
 
 end
