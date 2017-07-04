@@ -23,6 +23,11 @@ function GrenadeLauncher:update(dt)
 	for i=#self.firedGrenades,1,-1 do
 		self.firedGrenades[i]:update(dt)
 		if self.firedGrenades[i]:explode() then
+      local explosionDistance = self.position:dist(self.firedGrenades[i].position)
+      if explosionDistance < self.firedGrenades[i].explosionRange then  
+        local explosionDirection = (self.position - self.firedGrenades[i].position):normalized()
+        self.owner.velocity = self.owner.velocity + explosionDirection * self.firedGrenades[i].explosionPower * (self.firedGrenades[i].explosionRange - explosionDistance)/self.firedGrenades[i].explosionRange
+      end
 			table.remove(self.firedGrenades, i)
 		end
 	end
@@ -64,6 +69,8 @@ function Grenade:new(game, initialPosition, mousePos, power)
 
   self.timeToExplode = 1.3
   self.timeAfterSpawn = 0
+  self.explosionPower = 20
+  self.explosionRange = 100
 
 	self.width = 12
 	self.height = 12
