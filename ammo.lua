@@ -21,7 +21,15 @@ function Ammo:isColliding()
   or
   (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) ) then
 		return true
-  end
+	end
+		-- enemy colision
+	if self.position.x <= self.game.enemy.position.x + self.game.enemy.width
+		and  self.position.x >= self.game.enemy.position.x - self.game.enemy.width
+		and self.position.y <= self.game.enemy.position.y + self.game.enemy.height
+		and  self.position.y >= self.game.enemy.position.y - self.game.enemy.height then
+			self.game.enemy:getDammeged()
+		  return true
+		end
 
 	return false
 end

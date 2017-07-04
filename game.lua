@@ -3,6 +3,7 @@ require "map"
 require "weapon"
 require "gun"
 require "grenade-launcher"
+require "enemy"
 
 
 Game = {}
@@ -13,23 +14,27 @@ function Game:init()
   self.map = Map()
 
   -- self.weapon = Gun(self)
-  self.weapon = GrenadeLauncher(self)
+  self.weapon = Gun(self)
   self.player = Player(self)
 
   self.player:equip(self.weapon)
   self.weapon:setOwner(self.player)
+
+  self.enemy = Enemy(self)
 end
 
 function Game:update(dt)
   self.map:update(dt)
   self.player:update(dt)
   self.weapon:update(dt)
+  self.enemy:update(dt)
 end
 
 function Game:draw()
   self.map:draw()
   self.player:draw()
   self.weapon:draw()
+  self.enemy:draw()
 
   -- Print debug data
   love.graphics.setColor(0, 255, 0)
