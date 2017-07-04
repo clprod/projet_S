@@ -2,7 +2,7 @@ require "player"
 require "map"
 require "weapon"
 require "gun"
-
+require "grenade-launcher"
 
 
 Game = {}
@@ -12,7 +12,8 @@ function Game:init()
 
   self.map = Map()
 
-  self.weapon = Gun(self)
+  -- self.weapon = Gun(self)
+  self.weapon = GrenadeLauncher(self)
   self.player = Player(self)
 
   self.player:equip(self.weapon)
