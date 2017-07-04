@@ -13,12 +13,8 @@ function Game:init()
 
   self.map = Map()
 
-  -- self.weapon = Gun(self)
-  self.weapon = Gun(self)
   self.player = Player(self)
-
-  self.player:equip(self.weapon)
-  self.weapon:setOwner(self.player)
+  self.player:equip(GrenadeLauncher(self))
 
   self.enemy = Enemy(self)
 end
@@ -26,14 +22,12 @@ end
 function Game:update(dt)
   self.map:update(dt)
   self.player:update(dt)
-  self.weapon:update(dt)
   self.enemy:update(dt)
 end
 
 function Game:draw()
   self.map:draw()
   self.player:draw()
-  self.weapon:draw()
   self.enemy:draw()
 
   -- Print debug data

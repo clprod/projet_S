@@ -34,16 +34,21 @@ function Player:update(dt)
   if self.dashingTimer >= maxDashingTime and self.isDashing then
     self.isDashing = false
   end
+
+  self.weapon:update(dt)
 end
 
 function Player:draw()
   Player.super.draw(self)
   love.graphics.setColor(255, 255, 255)
   love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
+
+  self.weapon:draw()
 end
 
 function Player:equip(weapon)
   self.weapon = weapon
+  self.weapon:setOwner(self)
 end
 
 
