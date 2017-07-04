@@ -5,7 +5,7 @@ Player = Entity:extend()
 local gravity = 20
 local maxDashingTime = 2
 local dashingTimeRecovery = 10
-local dashingPower = 20
+local dashingPower = 10
 local spaceKeyIsRealeased = true
 
 function Player:new(game)
@@ -54,20 +54,16 @@ function Player:move(dt)
       -- Direction changed
       self.velocity.x = 0
     end
-    self.velocity.x = self.velocity.x - self.acceleration * dt
-    if self.velocity.x < -self.maxSpeed  and not self.dashing then
-      -- Keep speed at max speed
-      self.velocity.x = -self.maxSpeed
+    if self.velocity.x > -self.maxSpeed then
+      self.velocity.x = self.velocity.x - self.acceleration * dt
     end
   elseif love.keyboard.isDown("d") or love.keyboard.isDown("right") then
     if self.velocity.x < 0 then
       -- Direction changed
       self.velocity.x = 0
     end
-    self.velocity.x = self.velocity.x + self.acceleration * dt
-    if self.velocity.x > self.maxSpeed  and not self.dashing then
-      -- Keep speed at max speed
-      self.velocity.x = self.maxSpeed
+    if self.velocity.x < self.maxSpeed then
+      self.velocity.x = self.velocity.x + self.acceleration * dt
     end
   else
     -- No key pressed, slowly stop
