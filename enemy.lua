@@ -33,7 +33,7 @@ function Enemy:draw()
 
 end
 
-function Enemy:getDammeged()
+function Enemy:getDamaged()
   print("aie")
   self.lifeCpt = self.lifeCpt - 1
 end

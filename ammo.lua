@@ -22,14 +22,19 @@ function Ammo:isColliding()
   (self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2, -self.height/2)) or self.game.map:isPixelPosSolid(self.position + Vector(self.width/2, -self.height/2)) ) then
 		return true
 	end
-		-- enemy colision
-	if self.position.x <= self.game.enemy.position.x + self.game.enemy.width
-		and  self.position.x >= self.game.enemy.position.x - self.game.enemy.width
-		and self.position.y <= self.game.enemy.position.y + self.game.enemy.height
-		and  self.position.y >= self.game.enemy.position.y - self.game.enemy.height then
-			self.game.enemy:getDammeged()
-		  return true
+
+	-- enemy collision
+	for i,entity in ipairs(self.game.entities) do
+		if entity:is(Enemy) then
+			if self.position.x <= entity.position.x + entity.width
+						and  self.position.x >= entity.position.x - entity.width
+						and self.position.y <= entity.position.y + entity.height
+						and  self.position.y >= entity.position.y - entity.height then
+				entity:getDamaged()
+			  return true
+			end
 		end
+	end
 
 	return false
 end

@@ -13,22 +13,29 @@ function Game:init()
 
   self.map = Map()
 
-  self.player = Player(self)
-  self.player:equip(GrenadeLauncher(self))
+  self.entities = {}
 
-  self.enemy = Enemy(self)
+  local player = Player(self)
+  player:equip(Gun(self))
+
+  table.insert(self.entities, player)
+  table.insert(self.entities, Enemy(self))
 end
 
 function Game:update(dt)
   self.map:update(dt)
-  self.player:update(dt)
-  self.enemy:update(dt)
+
+  for i,entity in ipairs(self.entities) do
+    entity:update(dt)
+  end
 end
 
 function Game:draw()
   self.map:draw()
-  self.player:draw()
-  self.enemy:draw()
+
+  for i,entity in ipairs(self.entities) do
+    entity:draw()
+  end
 
   -- Print debug data
   love.graphics.setColor(0, 255, 0)
