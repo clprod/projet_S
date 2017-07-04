@@ -67,12 +67,16 @@ function Player:move(dt)
     end
   else
     -- No key pressed, slowly stop
-    if self.velocity.x < -1 and not self.dashing then
-      self.velocity.x = self.velocity.x + self.drag * dt
-    elseif self.velocity.x > 1 and not self.dashing then
-      self.velocity.x = self.velocity.x - self.drag * dt
-    else
-      self.velocity.x = 0
+    if self.position.y + self.height/2 >= love.graphics.getHeight() or
+                                          self.game.map:isPixelPosSolid(self.position + Vector(-self.width/2+1, self.height/2+1)) or
+                                          self.game.map:isPixelPosSolid(self.position + Vector(self.width/2-1, self.height/2+1)) then
+      if self.velocity.x < -1 then
+        self.velocity.x = self.velocity.x + self.drag * dt
+      elseif self.velocity.x > 1 then
+        self.velocity.x = self.velocity.x - self.drag * dt
+      else
+        self.velocity.x = 0
+      end
     end
   end
 
