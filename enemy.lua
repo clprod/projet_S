@@ -13,7 +13,7 @@ function Enemy:new(game, position)
   self.width = enemyImage:getWidth() * 0.1
 	self.height = enemyImage:getHeight() * 0.1
   self.velocity = Vector(0,0)
-  self.lifeCpt = 1
+  self.lifeCpt = 3
 end
 
 function Enemy:update(dt)
@@ -21,7 +21,10 @@ function Enemy:update(dt)
   self:move(dt)
 
   -- check death
-  -- if self.lifeCpt == 0 then self = nul end
+  if self.lifeCpt == 0 then
+    self.super:delEntity(self)
+    self = nil
+  end
 end
 
 function Enemy:draw()
@@ -34,7 +37,6 @@ function Enemy:draw()
 end
 
 function Enemy:getDamaged()
-  print("aie")
   self.lifeCpt = self.lifeCpt - 1
 end
 
