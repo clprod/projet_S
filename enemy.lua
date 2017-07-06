@@ -22,7 +22,7 @@ function Enemy:update(dt)
 
   -- check death
   if self.lifeCpt == 0 then
-    self.super:delEntity(self)
+    self.super.delEntity(self)
     self = nil
   end
 end
