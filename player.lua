@@ -8,11 +8,11 @@ local dashingTimeRecovery = 10
 local dashingPower = 10
 local spaceKeyIsRealeased = true
 
-function Player:new(game)
+function Player:new(game, position)
   self.name = "toto"
   Player.super.new(self, game)
   self.width, self.height = 30, 30
-  self.position = Vector(48, 48)
+  self.position = Vector(position.x, position.y)
   self.velocity = Vector()
   self.acceleration = 10
   self.drag = 40

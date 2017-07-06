@@ -15,7 +15,7 @@ function Game:init()
 
   self.entities = {}
 
-  local player = Player(self)
+  local player = Player(self, self.map:getSpawnPosition())
   player:equip(Gun(self))
 
   table.insert(self.entities, player)

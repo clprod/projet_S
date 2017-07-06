@@ -49,3 +49,15 @@ end
 function Map:isPixelPosSolid(pos)
   return self:isSolid(pos.x / self.tileWidth + 1, pos.y / self.tileHeight + 1)
 end
+
+function Map:getSpawnPosition()
+  for x=1,self.width do
+    for y=1,self.height do
+      if self.grid[y][x] == 2 then
+        return Vector(x * self.tileWidth, y * self.tileHeight)
+      end
+    end
+  end
+
+  return Vector(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
+end
