@@ -91,3 +91,14 @@ function Enemy:move(dt)
     end
   end
 end
+
+function Enemy:isPositionColliding(position)
+  if position.x <= self.position.x + self.width / 2
+    and  position.x >= self.position.x - self.width / 2
+    and position.y <= self.position.y + self.height / 2
+    and  position.y >= self.position.y - self.height / 2 then
+      return true
+  end
+
+  return false
+end

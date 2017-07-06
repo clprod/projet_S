@@ -26,10 +26,7 @@ function Ammo:isColliding()
 	-- enemy collision
 	for i,entity in ipairs(self.game.entities) do
 		if entity:is(Enemy) then
-			if self.position.x <= entity.position.x + entity.width
-						and  self.position.x >= entity.position.x - entity.width
-						and self.position.y <= entity.position.y + entity.height
-						and  self.position.y >= entity.position.y - entity.height then
+			if entity:isPositionColliding(self.position) then
 				entity:getDamaged()
 			  return true
 			end
