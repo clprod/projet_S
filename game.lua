@@ -1,3 +1,5 @@
+require "pause-menu"
+
 require "player"
 require "map"
 require "weapon"
@@ -43,4 +45,10 @@ function Game:draw()
   -- Print debug data
   love.graphics.setColor(0, 255, 0)
   love.graphics.print("fps: "..love.timer.getFPS(), 12, 12)
+end
+
+function Game:keypressed(key)
+  if key == "escape" then
+    GameState.switch(PauseMenu)
+  end
 end
