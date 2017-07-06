@@ -1,4 +1,5 @@
 require "entity"
+require "healthbar"
 
 Enemy = Entity:extend()
 
@@ -13,7 +14,9 @@ function Enemy:new(game, position)
   self.width = enemyImage:getWidth() * 0.1
 	self.height = enemyImage:getHeight() * 0.1
   self.velocity = Vector(0,0)
-  self.lifeCpt = 3
+  self.lifeCpt = 5
+
+  self.healthbar = Healthbar(self)
 end
 
 function Enemy:update(dt)
@@ -24,16 +27,19 @@ function Enemy:update(dt)
   if self.lifeCpt == 0 then
     self.super.delEntity(self)
     self = nil
+    return
   end
+
+  self.healthbar:update(dt)
 end
 
 function Enemy:draw()
   Enemy.super.draw(self)
-  if self.lifeCpt > 0 then
-	   love.graphics.setColor(255, 255, 255)
-	   love.graphics.draw(enemyImage, self.position.x - self.width/2, self.position.y - self.height/2, 0, 0.1, 0.1, self.width/2, self.height/2)
-  end
 
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.draw(enemyImage, self.position.x - self.width/2, self.position.y - self.height/2, 0, 0.1, 0.1, self.width/2, self.height/2)
+
+  self.healthbar:draw()
 end
 
 function Enemy:getDamaged()
