@@ -27,12 +27,16 @@ function GrenadeLauncher:update(dt)
       local grenadePosition = self.firedGrenades[i].position
       local grenadeExplosionRange = self.firedGrenades[i].explosionRange
       local grenadeExplosionPower = self.firedGrenades[i].explosionPower
-      
+
       for i,entity in ipairs(self.game.entities) do
         local explosionDistance = entity.position:dist(grenadePosition)
         if explosionDistance < grenadeExplosionRange then
           local explosionDirection = (entity.position - grenadePosition):normalized()
           entity.velocity = entity.velocity + explosionDirection * grenadeExplosionPower * (grenadeExplosionRange - explosionDistance) / grenadeExplosionRange
+
+          if entity:is(Enemy) then
+            entity:getDamaged()
+          end
         end
       end
 
