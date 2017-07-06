@@ -7,12 +7,9 @@ require "gun"
 require "grenade-launcher"
 require "enemy"
 
-
 Game = {}
 
 function Game:init()
-  love.window.setTitle("Project_S - Game")
-
   self.map = Map()
 
   self.entities = {}
@@ -25,6 +22,10 @@ function Game:init()
   table.insert(self.entities, Enemy(self, Vector(163, 230)))
   table.insert(self.entities, Enemy(self, Vector(363, 60)))
   table.insert(self.entities, Enemy(self, Vector(400, 300)))
+end
+
+function Game:enter()
+  love.window.setTitle("Project_S - Game")
 end
 
 function Game:update(dt)
