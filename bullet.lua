@@ -1,8 +1,6 @@
-
-
 Bullet = Ammo:extend()
 
-bulletImage = love.graphics.newImage("ressources/fire.png")
+local bulletImage = love.graphics.newImage("ressources/fire.png")
 
 function Bullet:new(game, initialPosition, mousePos)
 	Bullet.super.new(self, game, initialPosition)
