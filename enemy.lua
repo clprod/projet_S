@@ -23,13 +23,6 @@ function Enemy:update(dt)
   Enemy.super.update(self, dt)
   self:move(dt)
 
-  -- check death
-  if self.lifeCpt == 0 then
-    self.super.delEntity(self)
-    self = nil
-    return
-  end
-
   self.healthbar:update(dt)
 end
 
@@ -46,6 +39,9 @@ function Enemy:getDamaged()
   self.lifeCpt = self.lifeCpt - 1
 end
 
+function Enemy:isDead()
+  return (self.lifeCpt <= 0)
+end
 
 function Enemy:move(dt)
   -- gravity

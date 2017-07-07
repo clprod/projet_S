@@ -159,3 +159,7 @@ function Player:move(dt)
     end
   end
 end
+
+function Player:isDead()
+  return false
+end

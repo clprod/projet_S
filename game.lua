@@ -33,6 +33,10 @@ function Game:update(dt)
 
   for i,entity in ipairs(self.entities) do
     entity:update(dt)
+
+    if entity:isDead() then
+      table.remove(self.entities, i)
+    end
   end
 end
 
