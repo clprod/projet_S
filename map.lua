@@ -3,6 +3,7 @@ Map = Entity:extend()
 function Map:new()
   self.super.new(self)
 
+  self.name = "map0"
   self:init("maps/map0.lua")
 end
 
@@ -60,4 +61,22 @@ function Map:getSpawnPosition()
   end
 
   return Vector(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
+end
+
+
+function Map:solidBetween(posFrom, posDest)
+  -- TODO : fix and take y pos in count
+  x = posFrom.x
+  while x < posDest.x do
+    if self:isPixelPosSolid(Vector(x, posFrom.x)) then return true end
+    if posDest.x > posFrom.x then
+      --from left to right
+      x = x + self.width/2
+    end
+    if posDest.x < posFrom.x then
+      --from right to left
+      x = x - self.width/2
+    end
+  end
+  return false
 end

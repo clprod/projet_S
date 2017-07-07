@@ -14,10 +14,10 @@ function Game:init()
 
   self.entities = {}
 
-  local player = Player(self, self.map:getSpawnPosition())
-  player:equip(GrenadeLauncher(self))
+  self.player = Player(self, self.map:getSpawnPosition())
+  self.player:equip(GrenadeLauncher(self))
 
-  table.insert(self.entities, player)
+  table.insert(self.entities, self.player)
   table.insert(self.entities, Eye(self, Vector(663, 230)))
   table.insert(self.entities, Eye(self, Vector(163, 230)))
   table.insert(self.entities, Eye(self, Vector(363, 60)))

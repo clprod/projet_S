@@ -12,6 +12,8 @@ function Enemy:new(game, position, maxHealth)
 
   self.lifeCpt = maxHealth
   self.healthbar = Healthbar(self)
+  self.firedBullets = {}
+
 end
 
 function Enemy:update(dt)
@@ -19,12 +21,22 @@ function Enemy:update(dt)
   self:move(dt)
 
   self.healthbar:update(dt)
+  if self:canSeePlayer() then
+    self:attackHero()
+  end
+
+  for i=#self.firedBullets,1,-1 do
+    self.firedBullets[i]:update(dt)
+  end
 end
 
 function Enemy:draw()
   Enemy.super.draw(self)
 
   self.healthbar:draw()
+  for i,bullet in ipairs(self.firedBullets) do
+		bullet:draw()
+	end
 end
 
 function Enemy:getDamaged(damages)
@@ -48,4 +60,14 @@ function Enemy:isPositionColliding(position)
   end
 
   return false
+end
+
+function Enemy:attackHero()
+  table.insert(self.firedBullets, Bullet(self.game, self.position, self.game.player.position))
+end
+
+function Enemy:canSeePlayer()
+  if self.game.map:solidBetween(self.position, self.game.player.position) then
+    return true
+  end
 end
