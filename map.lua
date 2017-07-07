@@ -65,18 +65,16 @@ end
 
 
 function Map:solidBetween(posFrom, posDest)
-  -- TODO : fix and take y pos in count
-  x = posFrom.x
-  while x < posDest.x do
-    if self:isPixelPosSolid(Vector(x, posFrom.x)) then return true end
-    if posDest.x > posFrom.x then
-      --from left to right
-      x = x + self.width/2
-    end
-    if posDest.x < posFrom.x then
-      --from right to left
-      x = x - self.width/2
+  local direction = (posDest - posFrom):normalized()
+  local step = 16
+  local iterations = math.ceil(posFrom:dist(posDest) / step)
+
+  for i=0,iterations do
+    local pos = posFrom + direction * step * i
+    if self:isPixelPosSolid(pos) then
+      return true
     end
   end
+
   return false
 end
