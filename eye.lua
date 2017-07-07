@@ -1,30 +1,55 @@
 require "enemy"
 
-local enemyImage = love.graphics.newImage("ressources/eyeball/eyeball2processing1.png")
+local eyeImage = love.graphics.newImage("ressources/eyeball/sprite0_strip16.png")
 
 Eye = Enemy:extend()
 
 local gravity = 20
 local eyeMaxHealth = 5
+
 local eyeImageScale = 0.1
+local eyeWidth = 480
+local eyeHeight = 480
+local eyeSpriteNumber = 16
+local animationSpeed = 0.05
 
 function Eye:new(game, position)
   Eye.super.new(self, game, position, eyeMaxHealth)
 
-  self.name = "eye"
-  self.width = enemyImage:getWidth() * eyeImageScale
-	self.height = enemyImage:getHeight() * eyeImageScale
+  self.frames = {}
+
+  for i=0,eyeSpriteNumber-1 do
+    table.insert(self.frames, love.graphics.newQuad(i * eyeWidth, 0, eyeWidth, eyeHeight, eyeImage:getWidth(), eyeImage:getHeight()))
+  end
+
+  self.width = eyeWidth * eyeImageScale
+  self.height = eyeHeight * eyeImageScale
+
+  self.currentFrame = 1
+  self.lastFrameChange = 0
+  self.animationSpeed = math.random(3, 7) / 100
 
   self.velocity = Vector(0,0)
 end
 
 function Eye:update(dt)
   Eye.super.update(self, dt)
+
+  self.lastFrameChange = self.lastFrameChange + dt
+
+  if self.lastFrameChange >= self.animationSpeed then
+    self.currentFrame = self.currentFrame + 1
+    if self.currentFrame > eyeSpriteNumber  then
+      self.currentFrame = 1
+    end
+
+    self.lastFrameChange = 0
+  end
 end
 
 function Eye:draw()
   love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(enemyImage, self.position.x - self.width/2, self.position.y - self.height/2, 0, eyeImageScale, eyeImageScale, self.width/2, self.height/2)
+  love.graphics.draw(eyeImage, self.frames[self.currentFrame], self.position.x - self.width/2, self.position.y - self.height/2, 0, eyeImageScale, eyeImageScale, self.width/2, self.height/2)
 
   Eye.super.draw(self)
 end
