@@ -32,17 +32,23 @@ function Eye:new(game, position)
   self.velocity = Vector(0,0)
 
   self.firedBullets = {}
-  self.shootCooldown = 0.5
-  self.lastShoot = 0
+  self.shootCooldown = 1
+  self.lastTimeShoot = 0
 end
 
 function Eye:update(dt)
   Eye.super.update(self, dt)
 
-  if self:canSeePlayer() then
-    self:attackHero()
+  self.lastTimeShoot = self.lastTimeShoot - dt
+
+  if self.lastTimeShoot <= 0 then
+    if self:canSeePlayer() then
+      self:attackHero()
+      self.lastTimeShoot = self.shootCooldown
+    end
   end
 
+  -- Bullets
   for i=#self.firedBullets,1,-1 do
     self.firedBullets[i]:update(dt)
   end
