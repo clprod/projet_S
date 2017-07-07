@@ -35,7 +35,7 @@ function GrenadeLauncher:update(dt)
           entity.velocity = entity.velocity + explosionDirection * grenadeExplosionPower * (grenadeExplosionRange - explosionDistance) / grenadeExplosionRange
 
           if entity:is(Enemy) then
-            entity:getDamaged()
+            entity:getDamaged(1)
           end
         end
       end

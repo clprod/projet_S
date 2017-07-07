@@ -27,7 +27,7 @@ function Ammo:isColliding()
 	for i,entity in ipairs(self.game.entities) do
 		if entity:is(Enemy) then
 			if entity:isPositionColliding(self.position) then
-				entity:getDamaged()
+				entity:getDamaged(1)
 			  return true
 			end
 		end

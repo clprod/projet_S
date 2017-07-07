@@ -5,7 +5,7 @@ require "map"
 require "weapon"
 require "gun"
 require "grenade-launcher"
-require "enemy"
+require "eye"
 
 Game = {}
 
@@ -15,13 +15,13 @@ function Game:init()
   self.entities = {}
 
   local player = Player(self, self.map:getSpawnPosition())
-  player:equip(Gun(self))
+  player:equip(GrenadeLauncher(self))
 
   table.insert(self.entities, player)
-  table.insert(self.entities, Enemy(self, Vector(663, 230)))
-  table.insert(self.entities, Enemy(self, Vector(163, 230)))
-  table.insert(self.entities, Enemy(self, Vector(363, 60)))
-  table.insert(self.entities, Enemy(self, Vector(400, 300)))
+  table.insert(self.entities, Eye(self, Vector(663, 230)))
+  table.insert(self.entities, Eye(self, Vector(163, 230)))
+  table.insert(self.entities, Eye(self, Vector(363, 60)))
+  table.insert(self.entities, Eye(self, Vector(400, 300)))
 end
 
 function Game:enter()
