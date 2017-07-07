@@ -30,11 +30,24 @@ function Eye:new(game, position)
   self.animationSpeed = math.random(3, 7) / 100
 
   self.velocity = Vector(0,0)
+
+  self.firedBullets = {}
+  self.shootCooldown = 0.5
+  self.lastShoot = 0
 end
 
 function Eye:update(dt)
   Eye.super.update(self, dt)
 
+  if self:canSeePlayer() then
+    self:attackHero()
+  end
+
+  for i=#self.firedBullets,1,-1 do
+    self.firedBullets[i]:update(dt)
+  end
+
+  -- Animation
   self.lastFrameChange = self.lastFrameChange + dt
 
   if self.lastFrameChange >= self.animationSpeed then
@@ -50,6 +63,10 @@ end
 function Eye:draw()
   love.graphics.setColor(255, 255, 255)
   love.graphics.draw(eyeImage, self.frames[self.currentFrame], self.position.x - self.width/2, self.position.y - self.height/2, 0, eyeImageScale, eyeImageScale, self.width/2, self.height/2)
+
+  for i,bullet in ipairs(self.firedBullets) do
+		bullet:draw()
+	end
 
   Eye.super.draw(self)
 end
@@ -104,5 +121,15 @@ function Eye:move(dt)
       self.position.y = math.floor(self.position.y / self.game.map.tileHeight) * self.game.map.tileHeight + self.height/2
       self.velocity.y = 0
     end
+  end
+end
+
+function Eye:attackHero()
+  table.insert(self.firedBullets, Bullet(self.game, self.position, self.game.player.position))
+end
+
+function Eye:canSeePlayer()
+  if not self.game.map:solidBetween(self.position, self.game.player.position) then
+    return true
   end
 end
