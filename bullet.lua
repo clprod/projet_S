@@ -2,8 +2,8 @@ Bullet = Ammo:extend()
 
 local bulletImage = love.graphics.newImage("ressources/fire.png")
 
-function Bullet:new(game, initialPosition, mousePos)
-	Bullet.super.new(self, game, initialPosition)
+function Bullet:new(game, initialPosition, mousePos, isAlly)
+	Bullet.super.new(self, game, initialPosition, isAlly)
 	self.origin = initialPosition
 	self.direction = (mousePos - self.position):normalized()
 	self.speed = 500

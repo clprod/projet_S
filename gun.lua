@@ -41,7 +41,7 @@ function Gun:shoot()
 
 	if self.lastTimeShoot >= self.loadingTime then
 		local mouseX, mouseY = love.mouse.getPosition()
-		table.insert(self.firedBullets, Bullet(self.game, self.position, Vector(mouseX, mouseY)))
+		table.insert(self.firedBullets, Bullet(self.game, self.position, Vector(mouseX, mouseY), true))
 		self.lastTimeShoot = 0
 	end
 end

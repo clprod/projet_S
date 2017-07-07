@@ -21,6 +21,9 @@ function Player:new(game, position)
   self.weapon = game.weapon
   self.isDashing = false
   self.dashingTimer = 9999
+
+  self.lifeCpt = 3
+  self.healthbar = Healthbar(self)
 end
 
 function Player:update(dt)
@@ -51,6 +54,14 @@ function Player:equip(weapon)
   self.weapon:setOwner(self)
 end
 
+function Player:getDamaged(damages)
+  damages = damages or 0
+  self.lifeCpt = self.lifeCpt - damages
+end
+
+function Player:isDead()
+  return (self.lifeCpt <= 0)
+end
 
 function Player:move(dt)
   self.velocity.y = self.velocity.y + dt * gravity
@@ -158,6 +169,17 @@ function Player:move(dt)
       self.velocity.y = 0
     end
   end
+end
+
+function Player:isPositionColliding(position)
+  if position.x <= self.position.x + self.width / 2
+    and  position.x >= self.position.x - self.width / 2
+    and position.y <= self.position.y + self.height / 2
+    and  position.y >= self.position.y - self.height / 2 then
+      return true
+  end
+
+  return false
 end
 
 function Player:isDead()

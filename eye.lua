@@ -51,6 +51,9 @@ function Eye:update(dt)
   -- Bullets
   for i=#self.firedBullets,1,-1 do
     self.firedBullets[i]:update(dt)
+		if self.firedBullets[i]:isColliding() then
+			table.remove(self.firedBullets, i)
+		end
   end
 
   -- Animation
@@ -131,7 +134,7 @@ function Eye:move(dt)
 end
 
 function Eye:attackHero()
-  table.insert(self.firedBullets, Bullet(self.game, self.position, self.game.player.position))
+  table.insert(self.firedBullets, Bullet(self.game, self.position, self.game.player.position, false))
 end
 
 function Eye:canSeePlayer()
