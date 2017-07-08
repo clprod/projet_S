@@ -45,7 +45,7 @@ function Ghost:update(dt)
 
   if self.lastFrameChange >= self.animationSpeed then
     self.currentFrame = self.currentFrame + 1
-    if self.currentState == MOVING then  
+    if self.currentState == MOVING then
       if self.currentFrame > frameNumber[self.currentState] then
         self.currentFrame = 1
       end
@@ -61,7 +61,13 @@ end
 
 function Ghost:draw()
   love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(ghostImage, self.frames[self.currentState][self.currentFrame], self.position.x - self.width/2, self.position.y - self.height/2, 0, ghostSpriteScale, ghostSpriteScale)
+
+  local scale = ghostSpriteScale
+  if self.position.x > self.game.player.position.x then
+    scale = scale * -1
+  end
+
+  love.graphics.draw(ghostImage, self.frames[self.currentState][self.currentFrame], self.position.x, self.position.y, 0, scale, ghostSpriteScale, ghostWidth/2, ghostHeight/2)
 
   Ghost.super.draw(self)
 end

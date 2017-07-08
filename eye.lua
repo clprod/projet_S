@@ -71,7 +71,7 @@ end
 
 function Eye:draw()
   love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(eyeImage, self.frames[self.currentFrame], self.position.x - self.width/2, self.position.y - self.height/2, 0, eyeImageScale, eyeImageScale)
+  love.graphics.draw(eyeImage, self.frames[self.currentFrame], self.position.x, self.position.y, 0, eyeImageScale, eyeImageScale, eyeWidth/2, eyeHeight/2)
 
   for i,bullet in ipairs(self.firedBullets) do
 		bullet:draw()
