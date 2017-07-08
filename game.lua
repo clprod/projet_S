@@ -24,6 +24,7 @@ function Game:init()
   table.insert(self.entities, Eye(self, Vector(363, 60)))
   table.insert(self.entities, Eye(self, Vector(400, 300)))
   table.insert(self.entities, Ghost(self, Vector(700, 500)))
+  table.insert(self.entities, Ghost(self, Vector(100, 100)))
 end
 
 function Game:enter()
