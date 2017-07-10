@@ -10,7 +10,9 @@ require "ghost"
 
 Game = {}
 
-function Game:init()
+function Game:enter()
+  love.window.setTitle("Project_S - Game")
+
   self.map = Map()
 
   self.entities = {}
@@ -27,7 +29,7 @@ function Game:init()
   table.insert(self.entities, Ghost(self, Vector(100, 100)))
 end
 
-function Game:enter()
+function Game:resume()
   love.window.setTitle("Project_S - Game")
 end
 
@@ -64,6 +66,6 @@ end
 
 function Game:keypressed(key)
   if key == "escape" then
-    GameState.switch(PauseMenu)
+    GameState.push(PauseMenu)
   end
 end

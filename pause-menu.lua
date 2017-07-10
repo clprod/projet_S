@@ -10,5 +10,5 @@ function PauseMenu:draw()
 end
 
 function PauseMenu:keypressed(key)
-  GameState.switch(Game)
+  GameState.pop()
 end
