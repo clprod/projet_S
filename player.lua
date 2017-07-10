@@ -37,7 +37,7 @@ function Player:update(dt)
   if self.dashingTimer >= maxDashingTime and self.isDashing then
     self.isDashing = false
   end
-
+  self.healthbar:update(dt)
   self.weapon:update(dt)
 end
 
@@ -45,7 +45,7 @@ function Player:draw()
   Player.super.draw(self)
   love.graphics.setColor(255, 255, 255)
   love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
-
+  self.healthbar:draw(dt)
   self.weapon:draw()
 end
 
@@ -55,12 +55,17 @@ function Player:equip(weapon)
 end
 
 function Player:getDamaged(damages)
-  damages = damages or 0
-  self.lifeCpt = self.lifeCpt - damages
+  -- damages = damages or 0
+  if self.lifeCpt - damages > 0 then
+    self.lifeCpt = self.lifeCpt - damages
+  else
+    self.lifeCpt = 0
+  end
 end
 
 function Player:isDead()
-  return (self.lifeCpt <= 0)
+  print("On retourne ")
+  return (self.lifeCpt == 0)
 end
 
 function Player:move(dt)

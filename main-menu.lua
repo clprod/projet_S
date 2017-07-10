@@ -10,5 +10,6 @@ function MainMenu:draw()
 end
 
 function MainMenu:keypressed(key)
+  Game:init()
   GameState.switch(Game)
 end

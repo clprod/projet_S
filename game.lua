@@ -41,6 +41,13 @@ function Game:update(dt)
       table.remove(self.entities, i)
     end
   end
+
+  if self.player.lifeCpt == 0 then
+    for i,entity in ipairs(self.entities) do
+      table.remove(self.entities, i)
+      GameState.switch(MainMenu)
+    end
+  end
 end
 
 function Game:draw()
