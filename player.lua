@@ -24,13 +24,23 @@ function Player:new(game, position)
 
   self.lifeCpt = 3
   self.healthbar = Healthbar(self)
+
+  self.isShootPressed = false
 end
 
 function Player:update(dt)
   Player.super.update(self, dt)
   self:move(dt)
   if love.mouse.isDown("1") then
-    self.weapon:shoot()
+    if not self.isShootPressed then
+    self.isShootPressed = true
+    self.weapon:onShootPressed()
+    end
+  else
+    if self.isShootPressed then
+      self.isShootPressed = false
+      self.weapon:onShootReleased()
+    end
   end
 
   -- dash timer check

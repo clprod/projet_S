@@ -11,6 +11,7 @@ function GrenadeLauncher:new(game)
 	self.shootingPower = 13
 	self.loadingTime = 1
 	self.lastTimeShoot = 0
+	self.isShooting = false
 
 	self.firedGrenades = {}
 end
@@ -19,6 +20,10 @@ function GrenadeLauncher:update(dt)
 	GrenadeLauncher.super.update(self, dt)
 
   self.lastTimeShoot = self.lastTimeShoot - dt
+
+	if self.isShooting then
+		self:shoot()
+	end
 
 	for i=#self.firedGrenades,1,-1 do
 		self.firedGrenades[i]:update(dt)
@@ -54,6 +59,18 @@ function GrenadeLauncher:draw()
 	for i,grenade in ipairs(self.firedGrenades) do
 		grenade:draw()
 	end
+end
+
+function GrenadeLauncher:onShootPressed()
+	GrenadeLauncher.super.onShootPressed(self)
+
+	self.isShooting = true
+end
+
+function GrenadeLauncher:onShootReleased()
+	GrenadeLauncher.super.onShootReleased(self)
+
+	self.isShooting = false
 end
 
 function GrenadeLauncher:shoot()

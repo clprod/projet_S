@@ -20,6 +20,12 @@ function Weapon:draw()
 	Weapon.super.draw(self)
 end
 
+function Weapon:onShootPressed()
+end
+
+function Weapon:onShootReleased()
+end
+
 function Weapon:shoot()
 end
 
