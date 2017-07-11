@@ -2,6 +2,10 @@ require "weapon"
 require "ammo"
 
 -- ---------------- Bow -----------------------
+local bowImage = love.graphics.newImage("ressources/bow.png")
+local bowLoadingFrameNumber = 4
+local bowWidth, bowHeight = 32, 32
+local bowShootFrameTime = 0.1
 
 Bow = Weapon:extend()
 
@@ -16,16 +20,30 @@ function Bow:new(game)
   self.maxPower = 20
 
   self.firedArrows = {}
+
+  self.lastShootTime = 0
+  self.currentFrame = 1
+  self.frames = {}
+  for i=0,bowLoadingFrameNumber do
+    table.insert(self.frames, love.graphics.newQuad(i * bowWidth, 0, bowWidth, bowHeight, bowImage:getWidth(), bowImage:getHeight()))
+  end
 end
 
 function Bow:update(dt)
 	Bow.super.update(self, dt)
+
+  self.lastShootTime = self.lastShootTime + dt
+  if self.lastShootTime >= bowShootFrameTime then
+    self.currentFrame = 1
+  end
 
   if self.isLoading then
     self.loadingTime = self.loadingTime + dt
     if self.loadingTime > self.maxLoadingTime then
       self.loadingTime = self.maxLoadingTime
     end
+
+    self.currentFrame = math.floor(self.loadingTime * (bowLoadingFrameNumber - 1) / self.maxLoadingTime + 1)
   end
 
 	for i=#self.firedArrows,1,-1 do
@@ -39,8 +57,10 @@ end
 function Bow:draw()
 	Bow.super.draw(self)
 
-	love.graphics.setColor(0, 0, 255)
-	love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
+  local mouseX, mouseY = love.mouse.getPosition()
+
+	love.graphics.setColor(255, 255, 255)
+  love.graphics.draw(bowImage, self.frames[self.currentFrame], self.position.x, self.position.y, (Vector(mouseX, mouseY) - self.position):angleTo(), 1, 1, bowWidth/2, bowHeight/2)
 
 	for i,arrow in ipairs(self.firedArrows) do
 		arrow:draw()
@@ -57,6 +77,9 @@ end
 function Bow:onShootReleased()
 	Bow.super.onShootReleased(self)
 
+  self.lastShootTime = 0
+  self.currentFrame = bowLoadingFrameNumber + 1
+
   self.isLoading = false
   local shootPower = self.loadingTime * (self.maxPower - self.minPower) / self.maxLoadingTime + self.minPower
 
@@ -72,8 +95,8 @@ end
 local MOVING, HIT = 1, 2
 
 local arrowImage = love.graphics.newImage("ressources/arrow.png")
-local frameWidth, frameHeight = 32, 32
-local frameNumber = 6
+local arrowWidth, arrowHeight = 32, 32
+local arrowframeNumber = 6
 local movingAnimationSpeed = 1/24
 local hitAnimationSpeed = 1/12
 
@@ -100,8 +123,8 @@ function Arrow:new(game, initialPosition, mousePos, power, isAlly)
 
   for i=MOVING,HIT do
     self.frames[i] = {}
-    for j=0,frameNumber-1 do
-      table.insert(self.frames[i], love.graphics.newQuad(j * frameWidth, (i-1) * frameHeight, frameWidth, frameHeight, arrowImage:getWidth(), arrowImage:getHeight()))
+    for j=0,arrowframeNumber-1 do
+      table.insert(self.frames[i], love.graphics.newQuad(j * arrowWidth, (i-1) * arrowHeight, arrowWidth, arrowHeight, arrowImage:getWidth(), arrowImage:getHeight()))
     end
   end
 end
@@ -122,11 +145,11 @@ function Arrow:update(dt)
 
   if self.lastFrameChange >= self.animationSpeed then
     self.currentFrame = self.currentFrame + 1
-    if self.currentFrame > frameNumber then
+    if self.currentFrame > arrowframeNumber then
       if  self.currentState == MOVNG then
         self.currentFrame = 1
       else
-        self.currentFrame = frameNumber
+        self.currentFrame = arrowframeNumber
       end
     end
 
@@ -138,7 +161,7 @@ function Arrow:draw()
 	Arrow.super.draw(self)
 
 	love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(arrowImage, self.frames[self.currentState][self.currentFrame], self.position.x, self.position.y, self.velocity:angleTo(), 1, 1, frameWidth/2, frameHeight/2)
+  love.graphics.draw(arrowImage, self.frames[self.currentState][self.currentFrame], self.position.x, self.position.y, self.velocity:angleTo(), 1, 1, arrowWidth/2, arrowHeight/2)
 end
 
 function Arrow:move(dt)
@@ -183,5 +206,5 @@ function Arrow:isColliding()
 end
 
 function Arrow:canBeDestroyed()
-  return self.currentState == HIT and self.currentFrame == frameNumber
+  return self.currentState == HIT and self.currentFrame == arrowframeNumber
 end
