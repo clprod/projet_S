@@ -1,88 +1,72 @@
 require "weapon"
 require "ammo"
 
--- ---------------- Bow -----------------------
+-- ---------------- Grapnel -----------------------
 
-Bow = Weapon:extend()
+Grapnel = Weapon:extend()
+local shootPower = 12
 
-function Bow:new(game)
-  Bow.super.new(self, game)
+function Grapnel:new(game)
+  Grapnel.super.new(self, game)
 
-  self.isLoading = false
-  self.loadingTime = 0
-  self.maxLoadingTime = 2
+  self.firedHooks = {}
 
-  self.minPower = 5
-  self.maxPower = 20
-
-  self.firedArrows = {}
 end
 
-function Bow:update(dt)
-	Bow.super.update(self, dt)
+function Grapnel:update(dt)
+	Grapnel.super.update(self, dt)
 
-  if self.isLoading then
-    self.loadingTime = self.loadingTime + dt
-    if self.loadingTime > self.maxLoadingTime then
-      self.loadingTime = self.maxLoadingTime
+  for i=#self.firedHooks,1,-1 do
+    self.firedHooks[i]:update(dt)
+    if self.firedHooks[i]:canBeDestroyed() then
+      table.remove(self.firedHooks, i)
     end
   end
-
-	for i=#self.firedArrows,1,-1 do
-		self.firedArrows[i]:update(dt)
-		if self.firedArrows[i]:canBeDestroyed() then
-			table.remove(self.firedArrows, i)
-		end
-	end
 end
 
-function Bow:draw()
-	Bow.super.draw(self)
+function Grapnel:draw()
+	Grapnel.super.draw(self)
 
 	love.graphics.setColor(0, 0, 255)
 	love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
-
-	for i,arrow in ipairs(self.firedArrows) do
-		arrow:draw()
-	end
+  for i,hook in ipairs(self.firedHooks) do
+    hook:draw()
+  end
 end
 
-function Bow:onShootPressed()
-	Bow.super.onShootPressed(self)
-
-  self.isLoading = true
-  self.loadingTime = 0
-end
-
-function Bow:onShootReleased()
-	Bow.super.onShootReleased(self)
-
-  self.isLoading = false
-  local shootPower = self.loadingTime * (self.maxPower - self.minPower) / self.maxLoadingTime + self.minPower
-
+function Grapnel:onShootPressed()
+	Grapnel.super.onShootPressed(self)
   local mouseX, mouseY = love.mouse.getPosition()
-  table.insert(self.firedArrows, Arrow(self.game, self.position,  Vector(mouseX, mouseY), shootPower, true))
+  table.insert(self.firedHooks, Hook(self.game, self.position,  Vector(mouseX, mouseY), shootPower, true))
+
 end
 
-function Bow:shoot()
-	Bow.super.shoot(self)
+function Grapnel:onShootReleased()
+	Grapnel.super.onShootReleased(self)
+
 end
 
--- ---------------- Arrow -----------------------
+function Grapnel:shoot()
+	Grapnel.super.shoot(self)
+end
+
+-- ---------------- Hook -----------------------
 local MOVING, HIT = 1, 2
 
-local arrowImage = love.graphics.newImage("ressources/arrow.png")
+local hookImage = love.graphics.newImage("ressources/hook/hook.png")
+local ropeImage = love.graphics.newImage("ressources/hook/rope.png")
 local frameWidth, frameHeight = 32, 32
-local frameNumber = 6
+local frameNumber = 1
 local movingAnimationSpeed = 1/24
 local hitAnimationSpeed = 1/12
 
-Arrow = Ammo:extend()
+Hook = Ammo:extend()
 
-local gravity = 10
+local gravity = 8
+local hookImageScale = 0.8
 
-function Arrow:new(game, initialPosition, mousePos, power, isAlly)
-	Arrow.super.new(self, game, initialPosition, isAlly)
+function Hook:new(game, initialPosition, mousePos, power, isAlly)
+	Hook.super.new(self, game, initialPosition, isAlly)
 
   self.velocity = (mousePos - self.position):normalized() * power
 
@@ -98,18 +82,26 @@ function Arrow:new(game, initialPosition, mousePos, power, isAlly)
   self.lastFrameChange = 0
   self.animationSpeed = movingAnimationSpeed
 
+  self.firedRope = {}
+
   for i=MOVING,HIT do
     self.frames[i] = {}
     for j=0,frameNumber-1 do
-      table.insert(self.frames[i], love.graphics.newQuad(j * frameWidth, (i-1) * frameHeight, frameWidth, frameHeight, arrowImage:getWidth(), arrowImage:getHeight()))
+      print("insert")
+      table.insert(self.frames[i], love.graphics.newQuad(j * frameWidth, (i-1) * frameHeight, frameWidth, frameHeight, hookImage:getWidth(), hookImage:getHeight()))
     end
   end
+
 end
 
-function Arrow:update(dt)
-	Arrow.super.update(self, dt)
+function Hook:update(dt)
+  print("Update")
+	Hook.super.update(self, dt)
 	self:move(dt)
 
+  if self.currentState == MOVING and self:isColliding() then
+    self.currentState = HIT
+  end
   if self.currentState == MOVING and self:isColliding() then
     self.currentState = HIT
     self.currentFrame = 1
@@ -134,14 +126,16 @@ function Arrow:update(dt)
   end
 end
 
-function Arrow:draw()
-	Arrow.super.draw(self)
-
+function Hook:draw()
+	Hook.super.draw(self)
 	love.graphics.setColor(255, 255, 255)
-  love.graphics.draw(arrowImage, self.frames[self.currentState][self.currentFrame], self.position.x, self.position.y, self.velocity:angleTo(), 1, 1, frameWidth/2, frameHeight/2)
+  love.graphics.draw(hookImage, self.frames[self.currentState][self.currentFrame], self.position.x, self.position.y, self.velocity:angleTo(), hookImageScale, hookImageScale, frameWidth/2, frameHeight/2)
+
+
 end
 
-function Arrow:move(dt)
+function Hook:move(dt)
+
   if self.currentState == MOVING then
     self.velocity.y = self.velocity.y + gravity * dt
     self.position = self.position + self.velocity
@@ -152,7 +146,7 @@ function Arrow:move(dt)
   end
 end
 
-function Arrow:isColliding()
+function Hook:isColliding()
   local headPosition = self.position + self.velocity:normalized() * self.width/2
 
   -- Map collision
@@ -182,6 +176,6 @@ function Arrow:isColliding()
 	return false
 end
 
-function Arrow:canBeDestroyed()
+function Hook:canBeDestroyed()
   return self.currentState == HIT and self.currentFrame == frameNumber
 end

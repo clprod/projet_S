@@ -8,6 +8,7 @@ require "grenade-launcher"
 require "bow"
 require "eye"
 require "ghost"
+require "grapnel"
 
 Game = {}
 
@@ -19,7 +20,7 @@ function Game:enter()
   self.entities = {}
 
   self.player = Player(self, self.map:getSpawnPosition())
-  self.player:equip(Bow(self))
+  self.player:equip(Grapnel(self))
 
   table.insert(self.entities, self.player)
   table.insert(self.entities, Eye(self, Vector(663, 230)))
