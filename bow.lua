@@ -78,7 +78,11 @@ function Bow:onShootReleased()
 	Bow.super.onShootReleased(self)
 
   self.lastShootTime = 0
-  self.currentFrame = bowLoadingFrameNumber + 1
+  if self.currentFrame >= bowLoadingFrameNumber / 2 then
+    self.currentFrame = bowLoadingFrameNumber + 1
+  else
+    self.currentFrame = 1
+  end
 
   self.isLoading = false
   local shootPower = self.loadingTime * (self.maxPower - self.minPower) / self.maxLoadingTime + self.minPower
