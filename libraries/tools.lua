@@ -8,6 +8,7 @@ function Tools.CursorRendering(isGrabbed, isVisible)
 end
 
 function Tools.DrawCursor(cursorImage)
+  love.graphics.setColor(255, 255, 255)
   love.graphics.draw(cursorImage, love.mouse.getX() - cursorImage:getWidth() / 2, love.mouse.getY() - cursorImage:getHeight() /2)
 end
 
