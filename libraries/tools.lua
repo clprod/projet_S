@@ -8,7 +8,7 @@ function Tools.CursorRendering(isGrabbed, isVisible)
 end
 
 function Tools.DrawCursor(cursorImage)
-  love.graphics.draw(cursorImage, love.mouse.getX(), love.mouse.getY())
+  love.graphics.draw(cursorImage, love.mouse.getX() - cursorImage:getWidth() / 2, love.mouse.getY() - cursorImage:getHeight() /2)
 end
 
 return Tools

@@ -12,7 +12,7 @@ require "grapnel"
 
 Game = {}
 
-local cursor = love.graphics.newImage("ressources/cursorTarget.png")
+local cursor = love.graphics.newImage("ressources/cursorRedduce.png")
 
 function Game:enter()
   love.window.setTitle("Project_S - Game")
@@ -38,6 +38,7 @@ end
 
 function Game:resume()
   love.window.setTitle("Project_S - Game")
+  Tools.CursorRendering(true, false)
 end
 
 function Game:update(dt)
