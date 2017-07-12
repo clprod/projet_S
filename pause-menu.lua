@@ -1,6 +1,9 @@
 PauseMenu = {}
 
 function PauseMenu:enter()
+
+  -- Cursor is not grabbed and is visible
+  Tools.CursorRendering(false, true)
   love.window.setTitle("Project_S - PauseMenu")
 end
 

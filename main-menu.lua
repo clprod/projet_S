@@ -2,6 +2,7 @@ MainMenu = {}
 
 function MainMenu:enter()
   love.window.setTitle("Project_S - MainMenu")
+  love.mouse.setVisible(true)
 end
 
 function MainMenu:draw()

@@ -12,15 +12,20 @@ require "grapnel"
 
 Game = {}
 
+local cursor = love.graphics.newImage("ressources/cursorTarget.png")
+
 function Game:enter()
   love.window.setTitle("Project_S - Game")
+
+  -- Cursor is grabbed and not visible
+  Tools.CursorRendering(true, false)
 
   self.map = Map()
 
   self.entities = {}
 
   self.player = Player(self, self.map:getSpawnPosition())
-  self.player:equip(Grapnel(self))
+  self.player:equip(Gun(self))
 
   table.insert(self.entities, self.player)
   table.insert(self.entities, Eye(self, Vector(663, 230)))
@@ -61,6 +66,7 @@ function Game:draw()
     entity:draw()
   end
 
+  Tools.DrawCursor(cursor)
   -- Print debug data
   love.graphics.setColor(0, 255, 0)
   love.graphics.print("fps: "..love.timer.getFPS(), 12, 12)
