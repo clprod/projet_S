@@ -7,7 +7,7 @@ Grapnel = Weapon:extend()
 local shootPower = 12
 local ropeImage = love.graphics.newImage("ressources/hook/rope.png")
 local gravity = 8
-local hookImageScale = 0.8
+local hookImageScale = 0.4
 
 function Grapnel:new(game)
   Grapnel.super.new(self, game)
@@ -41,7 +41,6 @@ function Grapnel:draw()
     table.insert(self.firedRope, {self.firedHook:getPosAndAngle()})
     for i, tabValues in ipairs(self.firedRope) do
       if i ~= #self.firedRope then
-        print (tabValues[1], tabValues[2], tabValues[3])
         love.graphics.draw(ropeImage, tabValues[1], tabValues[2], tabValues[3], hookImageScale, hookImageScale, 16, 16)
       end
     end
@@ -99,7 +98,6 @@ function Hook:new(game, initialPosition, mousePos, power, isAlly)
   for i=MOVING,HIT do
     self.frames[i] = {}
     for j=0,frameNumber-1 do
-      print("insert")
       table.insert(self.frames[i], love.graphics.newQuad(j * frameWidth, (i-1) * frameHeight, frameWidth, frameHeight, hookImage:getWidth(), hookImage:getHeight()))
     end
   end
@@ -107,7 +105,6 @@ function Hook:new(game, initialPosition, mousePos, power, isAlly)
 end
 
 function Hook:update(dt)
-  print("Update")
 	Hook.super.update(self, dt)
 	self:move(dt)
 
