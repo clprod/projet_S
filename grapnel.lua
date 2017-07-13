@@ -5,21 +5,28 @@ require "ammo"
 
 Grapnel = Weapon:extend()
 local shootPower = 12
+local ropeImage = love.graphics.newImage("ressources/hook/rope.png")
+local gravity = 8
+local hookImageScale = 0.8
 
 function Grapnel:new(game)
   Grapnel.super.new(self, game)
 
-  self.firedHooks = {}
+  self.firedHook = nil
+  self.firedRope = {}
 
 end
 
 function Grapnel:update(dt)
 	Grapnel.super.update(self, dt)
 
-  for i=#self.firedHooks,1,-1 do
-    self.firedHooks[i]:update(dt)
-    if self.firedHooks[i]:canBeDestroyed() then
-      table.remove(self.firedHooks, i)
+  if self.firedHook ~= nil then
+    self.firedHook:update(dt)
+    if self.firedHook:canBeDestroyed() then
+      self.firedHook = nil
+      for i=#self.firedRope,1,-1 do
+    			table.remove(self.firedRope, i)
+    	end
     end
   end
 end
@@ -29,15 +36,24 @@ function Grapnel:draw()
 
 	love.graphics.setColor(0, 0, 255)
 	love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
-  for i,hook in ipairs(self.firedHooks) do
-    hook:draw()
+  if self.firedHook ~= nil then
+    self.firedHook:draw()
+    table.insert(self.firedRope, {self.firedHook:getPosAndAngle()})
+    for i, tabValues in ipairs(self.firedRope) do
+      if i ~= #self.firedRope then
+        print (tabValues[1], tabValues[2], tabValues[3])
+        love.graphics.draw(ropeImage, tabValues[1], tabValues[2], tabValues[3], hookImageScale, hookImageScale, 16, 16)
+      end
+    end
   end
 end
 
 function Grapnel:onShootPressed()
 	Grapnel.super.onShootPressed(self)
   local mouseX, mouseY = love.mouse.getPosition()
-  table.insert(self.firedHooks, Hook(self.game, self.position,  Vector(mouseX, mouseY), shootPower, true))
+  if self.firedHook == nil then
+    self.firedHook = Hook(self.game, self.position,  Vector(mouseX, mouseY), shootPower, true)
+  end
 
 end
 
@@ -54,7 +70,6 @@ end
 local MOVING, HIT = 1, 2
 
 local hookImage = love.graphics.newImage("ressources/hook/hook.png")
-local ropeImage = love.graphics.newImage("ressources/hook/rope.png")
 local frameWidth, frameHeight = 32, 32
 local frameNumber = 1
 local movingAnimationSpeed = 1/24
@@ -62,8 +77,7 @@ local hitAnimationSpeed = 1/12
 
 Hook = Ammo:extend()
 
-local gravity = 8
-local hookImageScale = 0.8
+
 
 function Hook:new(game, initialPosition, mousePos, power, isAlly)
 	Hook.super.new(self, game, initialPosition, isAlly)
@@ -81,8 +95,6 @@ function Hook:new(game, initialPosition, mousePos, power, isAlly)
   self.currentFrame = 1
   self.lastFrameChange = 0
   self.animationSpeed = movingAnimationSpeed
-
-  self.firedRope = {}
 
   for i=MOVING,HIT do
     self.frames[i] = {}
@@ -124,6 +136,10 @@ function Hook:update(dt)
 
     self.lastFrameChange = 0
   end
+end
+
+function Hook:getPosAndAngle()
+  return self.position.x, self.position.y, self.velocity:angleTo()
 end
 
 function Hook:draw()
