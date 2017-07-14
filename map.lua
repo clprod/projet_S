@@ -1,5 +1,7 @@
 Map = Entity:extend()
 
+local mapTileset = love.graphics.newImage("ressources/mapTileset.png")
+
 function Map:new()
   self.super.new(self)
 
@@ -16,6 +18,33 @@ function Map:init(filename)
   self.width = #self.grid[1]
 
   self.tileWidth, self.tileHeight = love.graphics.getWidth()/self.width, love.graphics.getHeight()/self.height
+
+  self.spriteBatch = love.graphics.newSpriteBatch(mapTileset, self.width * self.height)
+
+  self.quads = {}
+  self.quads[0] = love.graphics.newQuad(0, 0, self.tileWidth, self.tileHeight, mapTileset:getWidth(), mapTileset:getHeight())
+  self.quads[1] = love.graphics.newQuad(self.tileWidth, 0, self.tileWidth, self.tileHeight, mapTileset:getWidth(), mapTileset:getHeight())
+
+  self:updateSpriteBatch()
+end
+
+function Map:updateSpriteBatch()
+  self.spriteBatch:clear()
+
+  for x=1,self.width do
+    for y=1,self.height do
+      local quadId = nil
+      if self:isSolid(x, y) then
+        quadId = 0
+      else
+        quadId = 1
+      end
+
+      self.spriteBatch:add(self.quads[quadId], (x-1) * self.tileWidth, (y-1) * self.tileHeight)
+    end
+  end
+
+  self.spriteBatch:flush()
 end
 
 function Map:update(dt)
@@ -25,17 +54,8 @@ end
 function Map:draw()
   self.super.draw(self)
 
-  for x=1,self.width do
-    for y=1,self.height do
-      if self:isSolid(x, y) then
-        love.graphics.setColor(0, 0, 0)
-      else
-        love.graphics.setColor(50, 50, 50)
-      end
-
-      love.graphics.rectangle("fill", (x-1) * self.tileWidth, (y-1) * self.tileHeight, self.tileWidth, self.tileHeight)
-    end
-  end
+  love.graphics.setColor(255, 255, 255)
+  love.graphics.draw(self.spriteBatch, 0, 0)
 end
 
 function Map:isSolid(x, y)
