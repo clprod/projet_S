@@ -25,7 +25,7 @@ function Game:enter()
   self.entities = {}
 
   self.player = Player(self, self.map:getSpawnPosition())
-  self.player:equip(Grapnel(self))
+  self.player:equip(Bow(self))
 
   table.insert(self.entities, self.player)
   table.insert(self.entities, Eye(self, Vector(663, 230)))
@@ -56,6 +56,17 @@ function Game:update(dt)
     for i,entity in ipairs(self.entities) do
       table.remove(self.entities, i)
       GameState.switch(MainMenu)
+    end
+  end
+
+  -- check victory conditions
+  -- If only player remains
+  if #self.entities == 1 then
+    for i,entity in ipairs(self.entities) do
+      if entity == self.player then
+      -- Switch to score menu or next level
+      GameState.switch(MainMenu)
+      end
     end
   end
 end
