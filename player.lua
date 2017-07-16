@@ -134,8 +134,9 @@ function Player:move(dt)
     self.dashingTimer = love.timer.getTime()
     if self.velocity.x > 0 then
       self.velocity.x = self.velocity.x + dashingPower
-    else
+    else if self.velocity.x < 0 then
       self.velocity.x = self.velocity.x - dashingPower
+      end
     end
   end
 
