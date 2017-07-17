@@ -2,7 +2,10 @@ require "weapon"
 
 Gun = Weapon:extend()
 
-function Gun:new(game, shootingPower, loadingTime, spreadingPower, bulletType)
+local gunImages = {}
+gunImages[0] = love.graphics.newImage("ressources/gun.png")
+
+function Gun:new(game, shootingPower, loadingTime, spreadingPower, bulletImageId, weaponImageId)
 	Gun.super.new(self, game)
 
 	self.shootingPower = shootingPower or 500
@@ -11,7 +14,10 @@ function Gun:new(game, shootingPower, loadingTime, spreadingPower, bulletType)
 
 	self.lastTimeShoot = 0
 	self.isShooting = false
-	self.bulletType = bulletType
+	self.bulletImageId = bulletImageId
+	self.weaponImageId = weaponImageId
+
+	self.width, self.height = gunImages[self.weaponImageId]:getWidth(), gunImages[self.weaponImageId]:getHeight()
 
 	self.firedBullets = {}
 end
@@ -36,8 +42,13 @@ end
 function Gun:draw()
 	Gun.super.draw(self)
 
-	love.graphics.setColor(255, 0, 0)
-	love.graphics.rectangle("fill", self.position.x - self.width/2, self.position.y - self.height/2, self.width, self.height)
+  local mouseX, mouseY = love.mouse.getPosition()
+	local rotation = (Vector(mouseX, mouseY) - self.position):angleTo()
+	local scale = 1
+	if self.position.x > mouseX then scale = -1 end
+
+	love.graphics.setColor(255, 255, 255)
+  love.graphics.draw(gunImages[self.weaponImageId], self.position.x, self.position.y, rotation, 1, scale, self.width/2, self.height/2)
 
 	for i,bullet in ipairs(self.firedBullets) do
 		bullet:draw()
@@ -68,7 +79,7 @@ function Gun:shoot()
 
 		bulletTarget = bulletTarget + targetNormal * spread
 
-		table.insert(self.firedBullets, Bullet(self.game, self.position, bulletTarget, true, self.shootingPower, self.bulletType))
+		table.insert(self.firedBullets, Bullet(self.game, self.position, bulletTarget, true, self.shootingPower, self.bulletImageId))
 		self.lastTimeShoot = 0
 	end
 end
