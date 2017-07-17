@@ -3,7 +3,8 @@ require "weapon"
 Gun = Weapon:extend()
 
 local gunImages = {}
-gunImages[0] = love.graphics.newImage("ressources/gun.png")
+gunImages[0] = love.graphics.newImage("ressources/weapons/gun.png")
+gunImages[1] = love.graphics.newImage("ressources/weapons/submachine.png")
 
 function Gun:new(game, shootingPower, loadingTime, spreadingPower, bulletImageId, weaponImageId)
 	Gun.super.new(self, game)

@@ -2,7 +2,7 @@ require "weapon"
 require "ammo"
 
 -- ---------------- Bow -----------------------
-local bowImage = love.graphics.newImage("ressources/bow.png")
+local bowImage = love.graphics.newImage("ressources/weapons/bow.png")
 local bowLoadingFrameNumber = 4
 local bowWidth, bowHeight = 32, 32
 local bowShootFrameTime = 0.1
