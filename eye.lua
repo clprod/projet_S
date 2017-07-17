@@ -134,7 +134,7 @@ function Eye:move(dt)
 end
 
 function Eye:attackHero()
-  table.insert(self.firedBullets, Bullet(self.game, self.position, self.game.player.position, false))
+  table.insert(self.firedBullets, Bullet(self.game, self.position, self.game.player.position, false, 300))
 end
 
 function Eye:canSeePlayer()

@@ -25,7 +25,7 @@ function Game:enter()
   self.entities = {}
 
   self.player = Player(self, self.map:getSpawnPosition())
-  self.player:equip(Bow(self))
+  self.player:equip(Gun(self, 600, 0.15, 1))
 
   table.insert(self.entities, self.player)
   table.insert(self.entities, Eye(self, Vector(663, 230)))

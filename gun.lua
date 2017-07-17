@@ -2,13 +2,14 @@ require "weapon"
 
 Gun = Weapon:extend()
 
-function Gun:new(game)
+function Gun:new(game, shootingPower, loadingTime, bulletType)
 	Gun.super.new(self, game)
 
-	self.shootingPower = 50
-	self.loadingTime = 0.2
+	self.shootingPower = shootingPower or 500
+	self.loadingTime = loadingTime or 0.2
 	self.lastTimeShoot = 0
 	self.isShooting = false
+	self.bulletType = bulletType
 
 	self.firedBullets = {}
 end
@@ -58,7 +59,7 @@ function Gun:shoot()
 
 	if self.lastTimeShoot >= self.loadingTime then
 		local mouseX, mouseY = love.mouse.getPosition()
-		table.insert(self.firedBullets, Bullet(self.game, self.position, Vector(mouseX, mouseY), true))
+		table.insert(self.firedBullets, Bullet(self.game, self.position, Vector(mouseX, mouseY), true, self.shootingPower, self.bulletType))
 		self.lastTimeShoot = 0
 	end
 end
