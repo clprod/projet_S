@@ -98,7 +98,7 @@ end
 -- ---------------- Arrow -----------------------
 local MOVING, HIT = 1, 2
 
-local arrowImage = love.graphics.newImage("ressources/arrow.png")
+local arrowImage = love.graphics.newImage("ressources/ammunitions/arrow.png")
 local arrowWidth, arrowHeight = 32, 32
 local arrowframeNumber = 6
 local movingAnimationSpeed = 1/24

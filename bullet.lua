@@ -1,8 +1,8 @@
 Bullet = Ammo:extend()
 
 local bulletImages = {}
-bulletImages[0] = love.graphics.newImage("ressources/fire.png")
-bulletImages[1] = love.graphics.newImage("ressources/fire2.png")
+bulletImages[0] = love.graphics.newImage("ressources/ammunitions/fire.png")
+bulletImages[1] = love.graphics.newImage("ressources/ammunitions/fire2.png")
 
 function Bullet:new(game, initialPosition, targetPosition, isAlly, speed, bulletImageId)
 	Bullet.super.new(self, game, initialPosition, isAlly)
