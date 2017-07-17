@@ -2,11 +2,13 @@ require "weapon"
 
 Gun = Weapon:extend()
 
-function Gun:new(game, shootingPower, loadingTime, bulletType)
+function Gun:new(game, shootingPower, loadingTime, spreadingPower, bulletType)
 	Gun.super.new(self, game)
 
 	self.shootingPower = shootingPower or 500
 	self.loadingTime = loadingTime or 0.2
+	self.spreadingPower = spreadingPower or 0
+
 	self.lastTimeShoot = 0
 	self.isShooting = false
 	self.bulletType = bulletType
@@ -59,7 +61,14 @@ function Gun:shoot()
 
 	if self.lastTimeShoot >= self.loadingTime then
 		local mouseX, mouseY = love.mouse.getPosition()
-		table.insert(self.firedBullets, Bullet(self.game, self.position, Vector(mouseX, mouseY), true, self.shootingPower, self.bulletType))
+		local bulletTarget = Vector(mouseX, mouseY)
+		local targetNormal = (bulletTarget - self.position):perpendicular():normalized()
+
+		local spread = (math.random() - 0.5) * 2 * self.spreadingPower
+
+		bulletTarget = bulletTarget + targetNormal * spread
+
+		table.insert(self.firedBullets, Bullet(self.game, self.position, bulletTarget, true, self.shootingPower, self.bulletType))
 		self.lastTimeShoot = 0
 	end
 end
