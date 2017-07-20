@@ -8,11 +8,15 @@ ShopMenu = {}
 
 local shopEntities = {}
 
+function ShopMenu:init()
+  self.shop = Shop()
+  table.insert(shopEntities, self.shop)
+end
+
 function ShopMenu:enter()
   -- Cursor is not grabbed and is visible
   Tools.CursorRendering(false, true)
   love.window.setTitle("Project_S - ShopMenu")
-  table.insert(shopEntities, Shop())
 end
 
 function ShopMenu:draw()
@@ -21,7 +25,7 @@ function ShopMenu:draw()
   end
 
   love.graphics.setColor(255, 255, 255)
-  love.graphics.printf("Pause\npress 'exc' to resume", 0, love.graphics.getHeight() - love.graphics.getHeight()/6, love.graphics.getWidth(), "center")
+  love.graphics.printf("Shop\npress 'exc' to resume game\npress 'o' to open shop\npress 'c' to close shop", 0, love.graphics.getHeight() - love.graphics.getHeight()/6, love.graphics.getWidth(), "center")
 end
 
 function ShopMenu:update(dt)
@@ -31,39 +35,45 @@ function ShopMenu:update(dt)
 end
 
 function ShopMenu:keypressed(key)
-  GameState.pop()
+  if key == "escape" then
+    GameState.pop()
+  elseif key == "o" then
+    self.shop:open()
+  elseif key == "c" then
+    self.shop:close()
+  end
 end
 
 ------------------- Shop -----------------------
 
 local shopImage = love.graphics.newImage("ressources/shop/shop.png")
 local shopFrameNumber = 12
+local shopAnimationSpeed = 1/12
 local shopWidth, shopHeight = 256, 256
 local OPENING, CLOSING, IDLE = 1, 2, 3
 
 function Shop:new()
   self.position = Vector(love.graphics.getWidth()/2, love.graphics.getHeight()/2)
-  self.isOpen = false
-  self.isClose = true
-  self.openingTime = 2
-  self.moovingTime = 0
-  self.currentFrame = 1
-  self.frames = {}
-  self.currentState = OPENING
 
-  for i=1, shopFrameNumber do
-    table.insert(self.frames, love.graphics.newQuad(i * shopWidth, 0, shopWidth, shopHeight, shopImage:getWidth(), shopImage:getHeight()))
+  self.currentFrame = 1
+  self.lastFrameChange = 0
+  self.frames = {}
+
+  self.currentState = IDLE
+
+  local framePerLine = shopImage:getWidth() / shopWidth
+  for i=0, shopFrameNumber-1 do
+    table.insert(self.frames, love.graphics.newQuad((i % framePerLine) * shopWidth, math.floor(i / framePerLine) * shopHeight, shopWidth, shopHeight, shopImage:getWidth(), shopImage:getHeight()))
   end
 end
 
 function Shop:update(dt)
-  elapsed_time = os.difftime(self.moovingTime - self.openingTime)
-  self:setFrame()
-  self:setState()
+  self.lastFrameChange = self.lastFrameChange - dt
+  self:updateFrame(dt)
+  self:updateState()
 end
 
 function Shop:draw()
-  print(self.currentFrame)
   love.graphics.draw( shopImage,
                       self.frames[self.currentFrame],
                       self.position.x,
@@ -73,42 +83,42 @@ function Shop:draw()
                       shopHeight/2)
 end
 
-function Shop:setFrame()
-  if self.currentState == OPENING then
-    print((self.openingTime * (shopFrameNumber + 1)), " / ", self.moovingTime+1)
-    self.currentFrame = math.floor((self.moovingTime * (shopFrameNumber + 1)) / self.openingTime + 1)
-  end
-  if self.currentState == CLOSING then
-    self.currentFrame = math.floor((self.moovingTime * (shopFrameNumber + 1)) / (self.openingTime -self.moovingTime) + 1)
-  end
-  if self.currentState == IDLE and self.isClose then
-    self:open()
+function Shop:updateFrame(dt)
+  if self.lastFrameChange <= 0 then
+    self.lastFrameChange = shopAnimationSpeed
+    if self.currentState == OPENING then
+      if self.currentFrame < shopFrameNumber then
+        self.currentFrame = self.currentFrame + 1
+      end
+    end
+    if self.currentState == CLOSING then
+      if self.currentFrame > 1 then
+        self.currentFrame = self.currentFrame - 1
+      end
+    end
   end
 end
 
-function Shop:setState()
-  if self.currentFrame == 1 then -- Dor is full full close
-    self.currentState = IDLE
-    self.moovingTime = 0
-    self.isClose = true
-  end
-  if self.currentFrame == shopFrameNumber then -- Dor is full full open
-    self.currentState = IDLE
-    self.moovingTime = 0
-    self.isOpen = true
+function Shop:updateState()
+  if self.currentState == OPENING and self.currentFrame == shopFrameNumber then
+    self:setState(IDLE)
+  elseif self.currentState == CLOSING and self.currentFrame == 1 then
+    self:setState(IDLE)
   end
 end
 
 function Shop:open()
-  print("OPEN")
-  self.currentState = OPENING
-  self.moovingTime = love.timer.getTime()
+  self:setState(OPENING)
 end
 
 function Shop:close()
-  self.currentState = CLOSING
-  self.moovingTime = love.timer.getTime()
+  self:setState(CLOSING)
 end
+
+function Shop:setState(state)
+  self.currentState = state
+end
+
 ------------------- ShopMan -----------------------
 
 local shopManImage = love.graphics.newImage("ressources/shop/shop.png")
