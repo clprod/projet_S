@@ -1,7 +1,5 @@
 require "entity"
 
-
-Shop = Entity:extend()
 ------------------- ShopMenu -----------------------
 
 ShopMenu = {}
@@ -9,7 +7,9 @@ ShopMenu = {}
 local shopEntities = {}
 
 function ShopMenu:init()
+  self.shopMan = ShopMan()
   self.shop = Shop()
+  table.insert(shopEntities, self.shopMan)
   table.insert(shopEntities, self.shop)
 end
 
@@ -45,6 +45,7 @@ function ShopMenu:keypressed(key)
 end
 
 ------------------- Shop -----------------------
+Shop = Entity:extend()
 
 local shopImage = love.graphics.newImage("ressources/shop/shop.png")
 local shopFrameNumber = 12
@@ -120,9 +121,41 @@ function Shop:setState(state)
 end
 
 ------------------- ShopMan -----------------------
-
-local shopManImage = love.graphics.newImage("ressources/shop/shop.png")
-local shopManLoadingFrameNumber = 4
-local shopManWidth, shopHeight = 32, 32
-local shopManFrameTime = 0.1
 ShopMan = Entity:extend()
+
+local shopManImage = love.graphics.newImage("ressources/shop/shopMan.png")
+local shopManWidth, shopManHeight = 82, 118
+local shopManAnimationTime = 1/12
+
+function ShopMan:new()
+  self.position = Vector(love.graphics.getWidth()/2, love.graphics.getHeight()/2 - 10)
+
+  self.currentFrame = 1
+  self.lastFrameChange = 0
+  self.animationDirection = 1
+  self.frames = {}
+
+  local frameNumber = shopManImage:getWidth() / shopManWidth
+
+  for i=0, frameNumber-1 do
+    table.insert(self.frames, love.graphics.newQuad(i * shopManWidth, 0, shopManWidth, shopManHeight, shopManImage:getWidth(), shopManImage:getHeight()))
+  end
+end
+
+function ShopMan:update(dt)
+  self.lastFrameChange = self.lastFrameChange - dt
+
+  if self.lastFrameChange <= 0 then
+    self.lastFrameChange = shopManAnimationTime
+    self.currentFrame = self.currentFrame + self.animationDirection
+    if self.currentFrame == #self.frames then
+      self.animationDirection = -1
+    elseif self.currentFrame == 1 then
+      self.animationDirection = 1
+    end
+  end
+end
+
+function ShopMan:draw()
+  love.graphics.draw(shopManImage, self.frames[self.currentFrame], self.position.x, self.position.y, 0, 1, 1, shopManWidth/2, shopManHeight/2)
+end
