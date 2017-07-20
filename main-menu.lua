@@ -2,7 +2,8 @@ MainMenu = {}
 
 function MainMenu:enter()
   love.window.setTitle("Project_S - MainMenu")
-  love.mouse.setVisible(true)
+    -- Cursor is not grabbed and is visible
+    Tools.CursorRendering(false, true)
 end
 
 function MainMenu:draw()
