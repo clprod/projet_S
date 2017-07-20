@@ -1,4 +1,5 @@
 require "pause-menu"
+require "shop-menu"
 
 require "player"
 require "map"
@@ -91,6 +92,6 @@ end
 
 function Game:keypressed(key)
   if key == "escape" then
-    GameState.push(PauseMenu)
+    GameState.push(ShopMenu)
   end
 end
