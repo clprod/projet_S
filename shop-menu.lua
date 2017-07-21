@@ -1,7 +1,6 @@
 require "entity"
 
 ------------------- ShopMenu -----------------------
-
 ShopMenu = {}
 
 local shopEntities = {}
@@ -17,6 +16,8 @@ function ShopMenu:enter()
   -- Cursor is not grabbed and is visible
   Tools.CursorRendering(false, true)
   love.window.setTitle("Project_S - ShopMenu")
+
+  self.shop:open()
 end
 
 function ShopMenu:draw()
@@ -25,7 +26,7 @@ function ShopMenu:draw()
   end
 
   love.graphics.setColor(255, 255, 255)
-  love.graphics.printf("Shop\npress 'exc' to resume game\npress 'o' to open shop\npress 'c' to close shop", 0, love.graphics.getHeight() - love.graphics.getHeight()/6, love.graphics.getWidth(), "center")
+  love.graphics.printf("Shop\npress 'exc' to close", 0, love.graphics.getHeight() - love.graphics.getHeight()/6, love.graphics.getWidth(), "center")
 end
 
 function ShopMenu:update(dt)
@@ -36,10 +37,6 @@ end
 
 function ShopMenu:keypressed(key)
   if key == "escape" then
-    GameState.pop()
-  elseif key == "o" then
-    self.shop:open()
-  elseif key == "c" then
     self.shop:close()
   end
 end
@@ -105,6 +102,7 @@ function Shop:updateState()
     self:setState(IDLE)
   elseif self.currentState == CLOSING and self.currentFrame == 1 then
     self:setState(IDLE)
+    self:onClosed()
   end
 end
 
@@ -114,6 +112,10 @@ end
 
 function Shop:close()
   self:setState(CLOSING)
+end
+
+function Shop:onClosed()
+  GameState.pop()
 end
 
 function Shop:setState(state)
